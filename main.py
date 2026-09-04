@@ -1,41 +1,69 @@
-print("========================================")
-print("       STUDENT MANAGEMENT SYSTEM")
-print("========================================")
+students = []
 
-print()
-print("1. Add Student")
-print("2. View Students")
-print("3. Search Student")
-print("4. Update Student")
-print("5. Delete Student")
-print("6. Exit")
+while True:
 
-choice = input("\nEnter your choice: ")
+    print("\n========================================")
+    print("       STUDENT MANAGEMENT SYSTEM")
+    print("========================================")
 
-if choice == "1":
-    print("Add Student selected")
+    print()
+    print("1. Add Student")
+    print("2. View Students")
+    print("3. Search Student")
+    print("4. Update Student")
+    print("5. Delete Student")
+    print("6. Exit")
 
-    name = input("Enter Student Name:")
-    roll_No = int(input("Enter Student Roll No.:"))
-    course = input("Enter Student Course:")
-    age = int(input("Enter Student Age:"))
-    marks = int(input("Enter Student Marks:"))
-    print("\nStudent added successfully!")
+    choice = input("\nEnter your choice: ")
 
-elif choice == "2":
-    print("View Students selected")
+    if choice == "1":
+        print("\n----- Add Student -----")
 
-elif choice == "3":
-    print("Search Student selected")
+        name = input("Enter Student Name: ")
+        roll_no = int(input("Enter Student Roll No.: "))
+        course = input("Enter Student Course: ")
+        age = int(input("Enter Student Age: "))
+        marks = int(input("Enter Student Marks: "))
 
-elif choice == "4":
-    print("Update Student selected")
+        student = {
+            "name": name,
+            "roll_no": roll_no,
+            "course": course,
+            "age": age,
+            "marks": marks
+        }
 
-elif choice == "5":
-    print("Delete Student selected")
+        students.append(student)
 
-elif choice == "6":
-    print("Exiting Student Management System...")
+        print("\nStudent added successfully!")
 
-else:
-    print("Invalid choice!")
+    elif choice == "2":
+        print("\n----- Student List -----")
+
+        if len(students) == 0:
+            print("No students found.")
+
+        else:
+            for student in students:
+                print("\n-------------------------")
+                print("Name:", student["name"])
+                print("Roll No.:", student["roll_no"])
+                print("Course:", student["course"])
+                print("Age:", student["age"])
+                print("Marks:", student["marks"])
+
+    elif choice == "3":
+        print("\nSearch Student selected")
+
+    elif choice == "4":
+        print("\nUpdate Student selected")
+
+    elif choice == "5":
+        print("\nDelete Student selected")
+
+    elif choice == "6":
+        print("\nExiting Student Management System...")
+        break
+
+    else:
+        print("\nInvalid choice!")
