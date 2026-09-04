@@ -32,7 +32,7 @@ while True:
         marks = int(input("Enter Student Marks: "))
 
 
-# Create a dictionary to store one student's information
+        # Create a dictionary to store one student's information
 
         student = {
             "name": name,
@@ -52,10 +52,15 @@ while True:
     elif choice == "2":
         print("\n----- Student List -----")
 
+    # Check whether the student list is empty
+
         if len(students) == 0:
             print("No students found.")
 
         else:
+
+            # Display details of all stored students
+
             for student in students:
                 print("\n-------------------------")
                 print("Name:", student["name"])
@@ -83,10 +88,6 @@ while True:
 
 
  
-#  echo " " >> main.py
-# git add .
-# git commit -m "Update"
-# git push
- 
+
  
  
