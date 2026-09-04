@@ -31,6 +31,9 @@ while True:
         age = int(input("Enter Student Age: "))
         marks = int(input("Enter Student Marks: "))
 
+
+# Create a dictionary to store one student's information
+
         student = {
             "name": name,
             "roll_no": roll_no,
@@ -73,6 +76,13 @@ while True:
 
     else:
         print("\nInvalid choice!") 
+
+
+
  
+#  echo " " >> main.py
+# git add .
+# git commit -m "Update"
+# git push
  
  
