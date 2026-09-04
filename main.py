@@ -1,4 +1,7 @@
+
+# Store all students in a list
 students = []
+
 
 while True:
 
@@ -17,6 +20,9 @@ while True:
     choice = input("\nEnter your choice: ")
 
     if choice == "1":
+
+   # Take student details from the user        
+   
         print("\n----- Add Student -----")
 
         name = input("Enter Student Name: ")
@@ -67,4 +73,5 @@ while True:
 
     else:
         print("\nInvalid choice!") 
+ 
  
