@@ -6,7 +6,6 @@ while True:
     print("       STUDENT MANAGEMENT SYSTEM")
     print("========================================")
 
-
     print()
     print("1. Add Student")
     print("2. View Students")
@@ -68,3 +67,4 @@ while True:
 
     else:
         print("\nInvalid choice!") 
+ 
