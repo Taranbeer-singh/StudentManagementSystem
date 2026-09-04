@@ -42,6 +42,9 @@ while True:
             "marks": marks
         }
 
+        # Add the student to the student list
+
+
         students.append(student)
 
         print("\nStudent added successfully!")
@@ -84,5 +87,6 @@ while True:
 # git add .
 # git commit -m "Update"
 # git push
+ 
  
  
