@@ -28,8 +28,23 @@ while True:
 
         print("\n----- Add Student -----")
 
-        # Take student name
-        name = input("Enter Student Name: ")
+
+        # Validate student name
+        while True:
+
+            name = input("Enter Student Name: ")
+
+            # Check whether name is empty
+            if name.strip() == "":
+                print("Name cannot be empty.")
+                continue
+
+            # Check whether name contains only letters and spaces
+            if not name.replace(" ", "").isalpha():
+                print("Name can contain only letters and spaces.")
+                continue
+
+            break
 
 
         # Validate student roll number
@@ -56,15 +71,23 @@ while True:
                     print("Roll No. already exists.")
                     continue
 
-                # Roll number is valid
                 break
 
             except ValueError:
                 print("Invalid input! Please enter a number.")
 
 
-        # Take student course
-        course = input("Enter Student Course: ")
+        # Validate student course
+        while True:
+
+            course = input("Enter Student Course: ")
+
+            # Course cannot be empty
+            if course.strip() == "":
+                print("Course cannot be empty.")
+                continue
+
+            break
 
 
         # Validate student age
@@ -121,6 +144,7 @@ while True:
     elif choice == "2":
 
         print("\n----- Student List -----")
+
 
         # Check whether list is empty
         if len(students) == 0:
@@ -217,11 +241,35 @@ while True:
             if student["roll_no"] == update_roll_no:
 
                 print("\nStudent Found!")
-
                 print("\nEnter New Details")
 
-                student["name"] = input("Enter New Name: ")
-                student["course"] = input("Enter New Course: ")
+
+                # Validate new name
+                while True:
+
+                    name = input("Enter New Name: ")
+
+                    if name.strip() == "":
+                        print("Name cannot be empty.")
+                        continue
+
+                    if not name.replace(" ", "").isalpha():
+                        print("Name can contain only letters and spaces.")
+                        continue
+
+                    break
+
+
+                # Validate new course
+                while True:
+
+                    course = input("Enter New Course: ")
+
+                    if course.strip() == "":
+                        print("Course cannot be empty.")
+                        continue
+
+                    break
 
 
                 # Validate new age
@@ -256,6 +304,9 @@ while True:
                         print("Invalid input! Please enter a number.")
 
 
+                # Update student details
+                student["name"] = name
+                student["course"] = course
                 student["age"] = age
                 student["marks"] = marks
 
