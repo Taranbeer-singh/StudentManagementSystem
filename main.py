@@ -1,5 +1,6 @@
 # Student Management System
 
+
 # Store all students in a list
 students = []
 
@@ -64,6 +65,7 @@ while True:
 
             # Display details of all stored students
             for student in students:
+
                 print("\n-------------------------")
                 print("Name:", student["name"])
                 print("Roll No.:", student["roll_no"])
@@ -83,6 +85,7 @@ while True:
         # Initially assume that the student is not found
         found = False
 
+
         # Search through all students
         for student in students:
 
@@ -98,6 +101,7 @@ while True:
                 found = True
                 break
 
+
         # Display message if student was not found
         if found == False:
             print("\nStudent not found.")
@@ -106,7 +110,39 @@ while True:
     # Update Student
     elif choice == "4":
 
-        print("\nUpdate Student selected")
+        print("\n----- Update Student -----")
+
+        # Take roll number of the student to update
+        update_roll_no = int(input("Enter Roll No. to update: "))
+
+        # Initially assume that the student is not found
+        found = False
+
+
+        # Search for the student
+        for student in students:
+
+            if student["roll_no"] == update_roll_no:
+
+                print("\nStudent Found!")
+
+                # Take new details from the user
+                print("\nEnter New Details")
+
+                student["name"] = input("Enter New Name: ")
+                student["course"] = input("Enter New Course: ")
+                student["age"] = int(input("Enter New Age: "))
+                student["marks"] = int(input("Enter New Marks: "))
+
+                print("\nStudent updated successfully!")
+
+                found = True
+                break
+
+
+        # Display message if student was not found
+        if found == False:
+            print("\nStudent not found.")
 
 
     # Delete Student
@@ -125,6 +161,4 @@ while True:
     # Handle invalid menu choices
     else:
 
-        print("\nInvalid choice!") 
- 
- 
+        print("\nInvalid choice!")
