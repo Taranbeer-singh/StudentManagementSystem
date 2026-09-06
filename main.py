@@ -26,17 +26,82 @@ while True:
     # Add Student
     if choice == "1":
 
-        # Take student details from the user
         print("\n----- Add Student -----")
 
+        # Take student name
         name = input("Enter Student Name: ")
-        roll_no = int(input("Enter Student Roll No.: "))
+
+
+        # Validate student roll number
+        while True:
+
+            try:
+                roll_no = int(input("Enter Student Roll No.: "))
+
+                # Roll number must be positive
+                if roll_no <= 0:
+                    print("Roll No. must be greater than 0.")
+                    continue
+
+                # Check duplicate roll number
+                duplicate = False
+
+                for student in students:
+
+                    if student["roll_no"] == roll_no:
+                        duplicate = True
+                        break
+
+                if duplicate:
+                    print("Roll No. already exists.")
+                    continue
+
+                # Roll number is valid
+                break
+
+            except ValueError:
+                print("Invalid input! Please enter a number.")
+
+
+        # Take student course
         course = input("Enter Student Course: ")
-        age = int(input("Enter Student Age: "))
-        marks = int(input("Enter Student Marks: "))
 
 
-        # Create a dictionary to store one student's information
+        # Validate student age
+        while True:
+
+            try:
+                age = int(input("Enter Student Age: "))
+
+                # Age must be greater than 0
+                if age <= 0:
+                    print("Age must be greater than 0.")
+                    continue
+
+                break
+
+            except ValueError:
+                print("Invalid input! Please enter a number.")
+
+
+        # Validate student marks
+        while True:
+
+            try:
+                marks = int(input("Enter Student Marks: "))
+
+                # Marks must be between 0 and 100
+                if marks < 0 or marks > 100:
+                    print("Marks must be between 0 and 100.")
+                    continue
+
+                break
+
+            except ValueError:
+                print("Invalid input! Please enter a number.")
+
+
+        # Create dictionary for one student
         student = {
             "name": name,
             "roll_no": roll_no,
@@ -46,7 +111,7 @@ while True:
         }
 
 
-        # Add the student to the student list
+        # Add student to list
         students.append(student)
 
         print("\nStudent added successfully!")
@@ -57,13 +122,13 @@ while True:
 
         print("\n----- Student List -----")
 
-        # Check whether the student list is empty
+        # Check whether list is empty
         if len(students) == 0:
             print("No students found.")
 
         else:
 
-            # Display details of all stored students
+            # Display all students
             for student in students:
 
                 print("\n-------------------------")
@@ -79,14 +144,28 @@ while True:
 
         print("\n----- Search Student -----")
 
-        # Take roll number to search
-        search_roll_no = int(input("Enter Roll No. to search: "))
 
-        # Initially assume that the student is not found
+        # Validate search roll number
+        while True:
+
+            try:
+                search_roll_no = int(input("Enter Roll No. to search: "))
+
+                if search_roll_no <= 0:
+                    print("Roll No. must be greater than 0.")
+                    continue
+
+                break
+
+            except ValueError:
+                print("Invalid input! Please enter a number.")
+
+
+        # Initially assume student is not found
         found = False
 
 
-        # Search through all students
+        # Search through students
         for student in students:
 
             if student["roll_no"] == search_roll_no:
@@ -102,7 +181,6 @@ while True:
                 break
 
 
-        # Display message if student was not found
         if found == False:
             print("\nStudent not found.")
 
@@ -112,27 +190,74 @@ while True:
 
         print("\n----- Update Student -----")
 
-        # Take roll number of the student to update
-        update_roll_no = int(input("Enter Roll No. to update: "))
 
-        # Initially assume that the student is not found
+        # Validate update roll number
+        while True:
+
+            try:
+                update_roll_no = int(input("Enter Roll No. to update: "))
+
+                if update_roll_no <= 0:
+                    print("Roll No. must be greater than 0.")
+                    continue
+
+                break
+
+            except ValueError:
+                print("Invalid input! Please enter a number.")
+
+
+        # Initially assume student is not found
         found = False
 
 
-        # Search for the student
+        # Search for student
         for student in students:
 
             if student["roll_no"] == update_roll_no:
 
                 print("\nStudent Found!")
 
-                # Take new details from the user
                 print("\nEnter New Details")
 
                 student["name"] = input("Enter New Name: ")
                 student["course"] = input("Enter New Course: ")
-                student["age"] = int(input("Enter New Age: "))
-                student["marks"] = int(input("Enter New Marks: "))
+
+
+                # Validate new age
+                while True:
+
+                    try:
+                        age = int(input("Enter New Age: "))
+
+                        if age <= 0:
+                            print("Age must be greater than 0.")
+                            continue
+
+                        break
+
+                    except ValueError:
+                        print("Invalid input! Please enter a number.")
+
+
+                # Validate new marks
+                while True:
+
+                    try:
+                        marks = int(input("Enter New Marks: "))
+
+                        if marks < 0 or marks > 100:
+                            print("Marks must be between 0 and 100.")
+                            continue
+
+                        break
+
+                    except ValueError:
+                        print("Invalid input! Please enter a number.")
+
+
+                student["age"] = age
+                student["marks"] = marks
 
                 print("\nStudent updated successfully!")
 
@@ -140,7 +265,6 @@ while True:
                 break
 
 
-        # Display message if student was not found
         if found == False:
             print("\nStudent not found.")
 
@@ -150,19 +274,33 @@ while True:
 
         print("\n----- Delete Student -----")
 
-        # Take roll number of the student to delete
-        delete_roll_no = int(input("Enter Roll No. to delete: "))
 
-        # Initially assume that the student is not found
+        # Validate delete roll number
+        while True:
+
+            try:
+                delete_roll_no = int(input("Enter Roll No. to delete: "))
+
+                if delete_roll_no <= 0:
+                    print("Roll No. must be greater than 0.")
+                    continue
+
+                break
+
+            except ValueError:
+                print("Invalid input! Please enter a number.")
+
+
+        # Initially assume student is not found
         found = False
 
 
-        # Search for the student
+        # Search for student
         for student in students:
 
             if student["roll_no"] == delete_roll_no:
 
-                # Remove the student from the list
+                # Remove student from list
                 students.remove(student)
 
                 print("\nStudent deleted successfully!")
@@ -171,7 +309,6 @@ while True:
                 break
 
 
-        # Display message if student was not found
         if found == False:
             print("\nStudent not found.")
 
@@ -183,8 +320,7 @@ while True:
         break
 
 
-    # Handle invalid menu choices
+    # Invalid menu choice
     else:
 
         print("\nInvalid choice!")
-        
