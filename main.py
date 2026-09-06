@@ -120,6 +120,7 @@ while True:
 
 
         # Search for the student
+
         for student in students:
 
             if student["roll_no"] == update_roll_no:
@@ -127,6 +128,7 @@ while True:
                 print("\nStudent Found!")
 
                 # Take new details from the user
+
                 print("\nEnter New Details")
 
                 student["name"] = input("Enter New Name: ")
@@ -141,15 +143,40 @@ while True:
 
 
         # Display message if student was not found
+
         if found == False:
             print("\nStudent not found.")
 
 
     # Delete Student
+
     elif choice == "5":
+        print("\n----- Delete Student -----")
 
-        print("\nDelete Student selected")
+    # Take roll number of the student to delete
+    delete_roll_no = int(input("Enter Roll No. to delete: "))
 
+    # Initially assume that the student is not found
+    found = False
+
+
+    # Search for the student
+    for student in students:
+
+        if student["roll_no"] == delete_roll_no:
+
+            # Remove the student from the list
+            students.remove(student)
+
+            print("\nStudent deleted successfully!")
+
+            found = True
+            break
+
+
+    # Display message if student was not found
+    if found == False:
+        print("\nStudent not found.")
 
     # Exit program
     elif choice == "6":
