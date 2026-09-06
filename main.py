@@ -322,6 +322,7 @@ while True:
 
 
         # Validate delete roll number
+
         while True:
 
             try:
