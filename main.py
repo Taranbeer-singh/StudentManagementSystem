@@ -1,13 +1,12 @@
-# Student Management Sustem
+# Student Management System
 
 # Store all students in a list
-
-
 students = []
 
 
 while True:
 
+    # Display main menu
     print("\n========================================")
     print("       STUDENT MANAGEMENT SYSTEM")
     print("========================================")
@@ -22,10 +21,11 @@ while True:
 
     choice = input("\nEnter your choice: ")
 
+
+    # Add Student
     if choice == "1":
 
-   # Take student details from the user        
-   
+        # Take student details from the user
         print("\n----- Add Student -----")
 
         name = input("Enter Student Name: ")
@@ -36,7 +36,6 @@ while True:
 
 
         # Create a dictionary to store one student's information
-
         student = {
             "name": name,
             "roll_no": roll_no,
@@ -45,25 +44,25 @@ while True:
             "marks": marks
         }
 
+
         # Add the student to the student list
-
-
         students.append(student)
 
         print("\nStudent added successfully!")
 
+
+    # View Students
     elif choice == "2":
+
         print("\n----- Student List -----")
 
-    # Check whether the student list is empty
-
+        # Check whether the student list is empty
         if len(students) == 0:
             print("No students found.")
 
         else:
 
             # Display details of all stored students
-
             for student in students:
                 print("\n-------------------------")
                 print("Name:", student["name"])
@@ -72,21 +71,58 @@ while True:
                 print("Age:", student["age"])
                 print("Marks:", student["marks"])
 
-    elif choice == "3":
-        print("\nSearch Student selected")
 
+    # Search Student
+    elif choice == "3":
+
+        print("\n----- Search Student -----")
+
+        # Take roll number to search
+        search_roll_no = int(input("Enter Roll No. to search: "))
+
+        # Initially assume that the student is not found
+        found = False
+
+        # Search through all students
+        for student in students:
+
+            if student["roll_no"] == search_roll_no:
+
+                print("\nStudent Found!")
+                print("Name:", student["name"])
+                print("Roll No.:", student["roll_no"])
+                print("Course:", student["course"])
+                print("Age:", student["age"])
+                print("Marks:", student["marks"])
+
+                found = True
+                break
+
+        # Display message if student was not found
+        if found == False:
+            print("\nStudent not found.")
+
+
+    # Update Student
     elif choice == "4":
+
         print("\nUpdate Student selected")
 
+
+    # Delete Student
     elif choice == "5":
+
         print("\nDelete Student selected")
 
+
+    # Exit program
     elif choice == "6":
+
         print("\nExiting Student Management System...")
         break
 
-    else:
-        print("\nInvalid choice!") 
 
- 
- 
+    # Handle invalid menu choices
+    else:
+
+        print("\nInvalid choice!")
