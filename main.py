@@ -34,12 +34,10 @@ while True:
 
             name = input("Enter Student Name: ")
 
-            # Check whether name is empty
             if name.strip() == "":
                 print("Name cannot be empty.")
                 continue
 
-            # Check whether name contains only letters and spaces
             if not name.replace(" ", "").isalpha():
                 print("Name can contain only letters and spaces.")
                 continue
@@ -53,12 +51,10 @@ while True:
             try:
                 roll_no = int(input("Enter Student Roll No.: "))
 
-                # Roll number must be positive
                 if roll_no <= 0:
                     print("Roll No. must be greater than 0.")
                     continue
 
-                # Check duplicate roll number
                 duplicate = False
 
                 for student in students:
@@ -82,9 +78,12 @@ while True:
 
             course = input("Enter Student Course: ")
 
-            # Course cannot be empty
             if course.strip() == "":
                 print("Course cannot be empty.")
+                continue
+
+            if not course.replace(" ", "").isalpha():
+                print("Course can contain only letters and spaces.")
                 continue
 
             break
@@ -96,7 +95,6 @@ while True:
             try:
                 age = int(input("Enter Student Age: "))
 
-                # Age must be greater than 0
                 if age <= 0:
                     print("Age must be greater than 0.")
                     continue
@@ -113,7 +111,6 @@ while True:
             try:
                 marks = int(input("Enter Student Marks: "))
 
-                # Marks must be between 0 and 100
                 if marks < 0 or marks > 100:
                     print("Marks must be between 0 and 100.")
                     continue
@@ -146,13 +143,11 @@ while True:
         print("\n----- Student List -----")
 
 
-        # Check whether list is empty
         if len(students) == 0:
             print("No students found.")
 
         else:
 
-            # Display all students
             for student in students:
 
                 print("\n-------------------------")
@@ -185,11 +180,9 @@ while True:
                 print("Invalid input! Please enter a number.")
 
 
-        # Initially assume student is not found
         found = False
 
 
-        # Search through students
         for student in students:
 
             if student["roll_no"] == search_roll_no:
@@ -231,11 +224,9 @@ while True:
                 print("Invalid input! Please enter a number.")
 
 
-        # Initially assume student is not found
         found = False
 
 
-        # Search for student
         for student in students:
 
             if student["roll_no"] == update_roll_no:
@@ -267,6 +258,10 @@ while True:
 
                     if course.strip() == "":
                         print("Course cannot be empty.")
+                        continue
+
+                    if not course.replace(" ", "").isalpha():
+                        print("Course can contain only letters and spaces.")
                         continue
 
                     break
@@ -342,16 +337,13 @@ while True:
                 print("Invalid input! Please enter a number.")
 
 
-        # Initially assume student is not found
         found = False
 
 
-        # Search for student
         for student in students:
 
             if student["roll_no"] == delete_roll_no:
 
-                # Remove student from list
                 students.remove(student)
 
                 print("\nStudent deleted successfully!")
@@ -375,3 +367,4 @@ while True:
     else:
 
         print("\nInvalid choice!")
+
