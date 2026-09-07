@@ -1,5 +1,14 @@
 # Student Management System
 
+# Importing Validations
+from validations import (
+    get_valid_name,
+    get_valid_roll_no,
+    get_valid_course,
+    get_valid_age,
+    get_valid_marks
+)
+
 
 # Store all students in a list
 students = []
@@ -29,96 +38,19 @@ while True:
         print("\n----- Add Student -----")
 
 
-        # Validate student name
-        while True:
+        # Get validated student details
+        name = get_valid_name("Enter Student Name: ")
 
-            name = input("Enter Student Name: ")
+        roll_no = get_valid_roll_no(
+            "Enter Student Roll No.: ",
+            students
+        )
 
-            if name.strip() == "":
-                print("Name cannot be empty.")
-                continue
+        course = get_valid_course("Enter Student Course: ")
 
-            if not name.replace(" ", "").isalpha():
-                print("Name can contain only letters and spaces.")
-                continue
+        age = get_valid_age("Enter Student Age: ")
 
-            break
-
-
-        # Validate student roll number
-        while True:
-
-            try:
-                roll_no = int(input("Enter Student Roll No.: "))
-
-                if roll_no <= 0:
-                    print("Roll No. must be greater than 0.")
-                    continue
-
-                duplicate = False
-
-                for student in students:
-
-                    if student["roll_no"] == roll_no:
-                        duplicate = True
-                        break
-
-                if duplicate:
-                    print("Roll No. already exists.")
-                    continue
-
-                break
-
-            except ValueError:
-                print("Invalid input! Please enter a number.")
-
-
-        # Validate student course
-        while True:
-
-            course = input("Enter Student Course: ")
-
-            if course.strip() == "":
-                print("Course cannot be empty.")
-                continue
-
-            if not course.replace(" ", "").isalpha():
-                print("Course can contain only letters and spaces.")
-                continue
-
-            break
-
-
-        # Validate student age
-        while True:
-
-            try:
-                age = int(input("Enter Student Age: "))
-
-                if age <= 0:
-                    print("Age must be greater than 0.")
-                    continue
-
-                break
-
-            except ValueError:
-                print("Invalid input! Please enter a number.")
-
-
-        # Validate student marks
-        while True:
-
-            try:
-                marks = int(input("Enter Student Marks: "))
-
-                if marks < 0 or marks > 100:
-                    print("Marks must be between 0 and 100.")
-                    continue
-
-                break
-
-            except ValueError:
-                print("Invalid input! Please enter a number.")
+        marks = get_valid_marks("Enter Student Marks: ")
 
 
         # Create dictionary for one student
@@ -142,7 +74,6 @@ while True:
 
         print("\n----- Student List -----")
 
-
         if len(students) == 0:
             print("No students found.")
 
@@ -163,25 +94,12 @@ while True:
 
         print("\n----- Search Student -----")
 
-
-        # Validate search roll number
-        while True:
-
-            try:
-                search_roll_no = int(input("Enter Roll No. to search: "))
-
-                if search_roll_no <= 0:
-                    print("Roll No. must be greater than 0.")
-                    continue
-
-                break
-
-            except ValueError:
-                print("Invalid input! Please enter a number.")
+        search_roll_no = get_valid_roll_no(
+            "Enter Roll No. to search: "
+        )
 
 
         found = False
-
 
         for student in students:
 
@@ -207,25 +125,12 @@ while True:
 
         print("\n----- Update Student -----")
 
-
-        # Validate update roll number
-        while True:
-
-            try:
-                update_roll_no = int(input("Enter Roll No. to update: "))
-
-                if update_roll_no <= 0:
-                    print("Roll No. must be greater than 0.")
-                    continue
-
-                break
-
-            except ValueError:
-                print("Invalid input! Please enter a number.")
+        update_roll_no = get_valid_roll_no(
+            "Enter Roll No. to update: "
+        )
 
 
         found = False
-
 
         for student in students:
 
@@ -235,68 +140,14 @@ while True:
                 print("\nEnter New Details")
 
 
-                # Validate new name
-                while True:
+                # Get validated new details
+                name = get_valid_name("Enter New Name: ")
 
-                    name = input("Enter New Name: ")
+                course = get_valid_course("Enter New Course: ")
 
-                    if name.strip() == "":
-                        print("Name cannot be empty.")
-                        continue
+                age = get_valid_age("Enter New Age: ")
 
-                    if not name.replace(" ", "").isalpha():
-                        print("Name can contain only letters and spaces.")
-                        continue
-
-                    break
-
-
-                # Validate new course
-                while True:
-
-                    course = input("Enter New Course: ")
-
-                    if course.strip() == "":
-                        print("Course cannot be empty.")
-                        continue
-
-                    if not course.replace(" ", "").isalpha():
-                        print("Course can contain only letters and spaces.")
-                        continue
-
-                    break
-
-
-                # Validate new age
-                while True:
-
-                    try:
-                        age = int(input("Enter New Age: "))
-
-                        if age <= 0:
-                            print("Age must be greater than 0.")
-                            continue
-
-                        break
-
-                    except ValueError:
-                        print("Invalid input! Please enter a number.")
-
-
-                # Validate new marks
-                while True:
-
-                    try:
-                        marks = int(input("Enter New Marks: "))
-
-                        if marks < 0 or marks > 100:
-                            print("Marks must be between 0 and 100.")
-                            continue
-
-                        break
-
-                    except ValueError:
-                        print("Invalid input! Please enter a number.")
+                marks = get_valid_marks("Enter New Marks: ")
 
 
                 # Update student details
@@ -304,6 +155,7 @@ while True:
                 student["course"] = course
                 student["age"] = age
                 student["marks"] = marks
+
 
                 print("\nStudent updated successfully!")
 
@@ -320,26 +172,12 @@ while True:
 
         print("\n----- Delete Student -----")
 
-
-        # Validate delete roll number
-
-        while True:
-
-            try:
-                delete_roll_no = int(input("Enter Roll No. to delete: "))
-
-                if delete_roll_no <= 0:
-                    print("Roll No. must be greater than 0.")
-                    continue
-
-                break
-
-            except ValueError:
-                print("Invalid input! Please enter a number.")
+        delete_roll_no = get_valid_roll_no(
+            "Enter Roll No. to delete: "
+        )
 
 
         found = False
-
 
         for student in students:
 
@@ -368,4 +206,3 @@ while True:
     else:
 
         print("\nInvalid choice!")
-
