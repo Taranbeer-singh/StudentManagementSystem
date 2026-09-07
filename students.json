@@ -5,6 +5,15 @@
         "course": "BCA",
         "age": 21,
         "marks": 90
+    },
+    {
+        "name": "Taran",
+        "roll_no": 22,
+        "course": "BBA",
+        "age": 22,
+        "marks": 80
     }
-    
+
+
 ]
+
