@@ -1,6 +1,5 @@
 # Student Management System
 
-# Importing Validations
 from validations import (
     get_valid_name,
     get_valid_roll_no,
@@ -9,9 +8,11 @@ from validations import (
     get_valid_marks
 )
 
+from file_handler import save_students, load_students
 
-# Store all students in a list
-students = []
+
+# Load existing students from file
+students = load_students()
 
 
 while True:
@@ -65,6 +66,9 @@ while True:
 
         # Add student to list
         students.append(student)
+
+        # Save updated list to file
+        save_students(students)
 
         print("\nStudent added successfully!")
 
@@ -157,6 +161,9 @@ while True:
                 student["marks"] = marks
 
 
+                # Save updated list to file
+                save_students(students)
+
                 print("\nStudent updated successfully!")
 
                 found = True
@@ -184,6 +191,9 @@ while True:
             if student["roll_no"] == delete_roll_no:
 
                 students.remove(student)
+
+                # Save updated list to file
+                save_students(students)
 
                 print("\nStudent deleted successfully!")
 
