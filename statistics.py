@@ -32,3 +32,21 @@ def get_overall_statistics(students):
         lowest_marks
     )
 
+def get_course_statistics(students):
+
+    course_count = {}
+
+    for student in students:
+
+        course = student["course"]
+
+        if course in course_count:
+
+            course_count[course] += 1
+
+        else:
+
+            course_count[course] = 1
+
+    return course_count
+

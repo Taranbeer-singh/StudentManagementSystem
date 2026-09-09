@@ -11,7 +11,10 @@ from file_handler import save_students, load_students
 
 from courses import courses
 
-from statistics import get_overall_statistics
+from statistics import (
+    get_overall_statistics,
+    get_course_statistics
+)
 
 
 # Load existing students from file
@@ -479,6 +482,7 @@ while True:
 
         else:
 
+            # Get overall statistics
             (
                 total_students,
                 average_marks,
@@ -506,6 +510,22 @@ while True:
                 "Lowest Marks:",
                 lowest_marks
             )
+
+
+            # Get course-wise statistics
+            course_statistics = get_course_statistics(
+                students
+            )
+
+
+            print("\nCourse-wise Students:")
+
+
+            for course, count in course_statistics.items():
+
+                print(
+                    f"{course}: {count}"
+                )
 
 
     # Exit program
