@@ -50,3 +50,21 @@ def get_course_statistics(students):
 
     return course_count
 
+def get_year_statistics(students):
+
+    year_count = {}
+
+    for student in students:
+
+        year = student["year"]
+
+        if year in year_count:
+
+            year_count[year] += 1
+
+        else:
+
+            year_count[year] = 1
+
+    return year_count
+
