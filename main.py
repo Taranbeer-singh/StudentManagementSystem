@@ -15,7 +15,8 @@ from statistics import (
     get_overall_statistics,
     get_course_statistics,
     get_year_statistics,
-    get_student_marks_statistics
+    get_student_marks_statistics,
+    get_subject_statistics
 )
 
 
@@ -585,6 +586,22 @@ while True:
 
                 print(
                     f"{year}: {count}"
+                )
+
+
+            # Subject-wise average marks
+            subject_statistics = get_subject_statistics(
+                students
+            )
+
+
+            print("\nSubject-wise Average Marks:")
+
+
+            for subject, average in subject_statistics.items():
+
+                print(
+                    f"{subject}: {average:.2f}"
                 )
 
 

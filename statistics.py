@@ -87,3 +87,31 @@ def get_student_marks_statistics(student):
 
     return total_marks, obtained_marks, percentage
 
+def get_subject_statistics(students):
+
+    subject_marks = {}
+
+    for student in students:
+
+        for subject, marks in student["marks"].items():
+
+            if subject in subject_marks:
+
+                subject_marks[subject].append(marks)
+
+            else:
+
+                subject_marks[subject] = [marks]
+
+
+    subject_average = {}
+
+    for subject, marks_list in subject_marks.items():
+
+        average = sum(marks_list) / len(marks_list)
+
+        subject_average[subject] = average
+
+
+    return subject_average
+
