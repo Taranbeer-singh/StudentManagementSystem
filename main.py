@@ -11,6 +11,8 @@ from file_handler import save_students, load_students
 
 from courses import courses
 
+from statistics import get_overall_statistics
+
 
 # Load existing students from file
 students = load_students()
@@ -29,7 +31,8 @@ while True:
     print("3. Search Student")
     print("4. Update Student")
     print("5. Delete Student")
-    print("6. Exit")
+    print("6. Statistics")
+    print("7. Exit")
 
     choice = input("\nEnter your choice: ")
 
@@ -464,8 +467,49 @@ while True:
             print("\nStudent not found.")
 
 
-    # Exit program
+    # Statistics
     elif choice == "6":
+
+        print("\n----- Student Statistics -----")
+
+
+        if len(students) == 0:
+
+            print("\nNo students found.")
+
+        else:
+
+            (
+                total_students,
+                average_marks,
+                highest_marks,
+                lowest_marks
+            ) = get_overall_statistics(students)
+
+
+            print(
+                "\nTotal Students:",
+                total_students
+            )
+
+            print(
+                "Average Marks:",
+                round(average_marks, 2)
+            )
+
+            print(
+                "Highest Marks:",
+                highest_marks
+            )
+
+            print(
+                "Lowest Marks:",
+                lowest_marks
+            )
+
+
+    # Exit program
+    elif choice == "7":
 
         print(
             "\nExiting Student Management System..."
