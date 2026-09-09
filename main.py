@@ -3,12 +3,13 @@
 from validations import (
     get_valid_name,
     get_valid_roll_no,
-    get_valid_course,
     get_valid_age,
     get_valid_marks
 )
 
 from file_handler import save_students, load_students
+
+from courses import courses
 
 
 # Load existing students from file
@@ -38,7 +39,6 @@ while True:
 
         print("\n----- Add Student -----")
 
-
         # Get validated student details
         name = get_valid_name("Enter Student Name: ")
 
@@ -47,19 +47,101 @@ while True:
             students
         )
 
-        course = get_valid_course("Enter Student Course: ")
 
+        # Select Course
+        print("\nAvailable Courses:")
+
+        course_list = list(courses.keys())
+
+        for index, course in enumerate(course_list, start=1):
+            print(f"{index}. {course}")
+
+
+        while True:
+
+            try:
+
+                course_choice = int(
+                    input("\nSelect Course: ")
+                )
+
+                if course_choice < 1 or course_choice > len(course_list):
+                    print("Invalid course choice.")
+                    continue
+
+                course = course_list[course_choice - 1]
+
+                break
+
+            except ValueError:
+
+                print("Invalid input! Please enter a number.")
+
+
+        # Select Year
+        print(f"\nAvailable Years for {course}:")
+
+        year_list = list(courses[course].keys())
+
+        for index, year in enumerate(year_list, start=1):
+            print(f"{index}. {year}")
+
+
+        while True:
+
+            try:
+
+                year_choice = int(
+                    input("\nSelect Year: ")
+                )
+
+                if year_choice < 1 or year_choice > len(year_list):
+                    print("Invalid year choice.")
+                    continue
+
+                year = year_list[year_choice - 1]
+
+                break
+
+            except ValueError:
+
+                print("Invalid input! Please enter a number.")
+
+
+        # Get subjects for selected course and year
+        subjects = courses[course][year]
+
+
+        print("\nEnter Marks:")
+
+        marks = {}
+
+
+        # Get marks for each subject
+        for subject in subjects:
+
+            marks[subject] = get_valid_marks(
+                f"Enter marks for {subject}: "
+            )
+
+
+        # Get age
         age = get_valid_age("Enter Student Age: ")
-
-        marks = get_valid_marks("Enter Student Marks: ")
 
 
         # Create dictionary for one student
         student = {
+
             "name": name,
+
             "roll_no": roll_no,
+
             "course": course,
+
+            "year": year,
+
             "age": age,
+
             "marks": marks
         }
 
@@ -67,8 +149,10 @@ while True:
         # Add student to list
         students.append(student)
 
+
         # Save updated list to file
         save_students(students)
+
 
         print("\nStudent added successfully!")
 
@@ -78,25 +162,41 @@ while True:
 
         print("\n----- Student List -----")
 
+
         if len(students) == 0:
+
             print("No students found.")
+
 
         else:
 
             for student in students:
 
                 print("\n-------------------------")
+
                 print("Name:", student["name"])
+
                 print("Roll No.:", student["roll_no"])
+
                 print("Course:", student["course"])
+
+                print("Year:", student["year"])
+
                 print("Age:", student["age"])
-                print("Marks:", student["marks"])
+
+
+                print("Marks:")
+
+                for subject, marks in student["marks"].items():
+
+                    print(f"  {subject}: {marks}")
 
 
     # Search Student
     elif choice == "3":
 
         print("\n----- Search Student -----")
+
 
         search_roll_no = get_valid_roll_no(
             "Enter Roll No. to search: "
@@ -105,22 +205,38 @@ while True:
 
         found = False
 
+
         for student in students:
 
             if student["roll_no"] == search_roll_no:
 
                 print("\nStudent Found!")
+
                 print("Name:", student["name"])
+
                 print("Roll No.:", student["roll_no"])
+
                 print("Course:", student["course"])
+
+                print("Year:", student["year"])
+
                 print("Age:", student["age"])
-                print("Marks:", student["marks"])
+
+
+                print("Marks:")
+
+                for subject, marks in student["marks"].items():
+
+                    print(f"  {subject}: {marks}")
+
 
                 found = True
+
                 break
 
 
         if found == False:
+
             print("\nStudent not found.")
 
 
@@ -129,6 +245,7 @@ while True:
 
         print("\n----- Update Student -----")
 
+
         update_roll_no = get_valid_roll_no(
             "Enter Roll No. to update: "
         )
@@ -136,41 +253,174 @@ while True:
 
         found = False
 
+
         for student in students:
 
             if student["roll_no"] == update_roll_no:
 
                 print("\nStudent Found!")
+
                 print("\nEnter New Details")
 
 
-                # Get validated new details
-                name = get_valid_name("Enter New Name: ")
+                # Get new name
+                name = get_valid_name(
+                    "Enter New Name: "
+                )
 
-                course = get_valid_course("Enter New Course: ")
 
-                age = get_valid_age("Enter New Age: ")
+                # Get new age
+                age = get_valid_age(
+                    "Enter New Age: "
+                )
 
-                marks = get_valid_marks("Enter New Marks: ")
+
+                # Select new course
+                print("\nAvailable Courses:")
+
+                course_list = list(courses.keys())
+
+
+                for index, course in enumerate(
+                    course_list,
+                    start=1
+                ):
+
+                    print(f"{index}. {course}")
+
+
+                while True:
+
+                    try:
+
+                        course_choice = int(
+                            input("\nSelect Course: ")
+                        )
+
+
+                        if (
+                            course_choice < 1
+                            or course_choice > len(course_list)
+                        ):
+
+                            print("Invalid course choice.")
+
+                            continue
+
+
+                        course = course_list[
+                            course_choice - 1
+                        ]
+
+                        break
+
+
+                    except ValueError:
+
+                        print(
+                            "Invalid input! "
+                            "Please enter a number."
+                        )
+
+
+                # Select new year
+                print(
+                    f"\nAvailable Years for {course}:"
+                )
+
+
+                year_list = list(
+                    courses[course].keys()
+                )
+
+
+                for index, year in enumerate(
+                    year_list,
+                    start=1
+                ):
+
+                    print(f"{index}. {year}")
+
+
+                while True:
+
+                    try:
+
+                        year_choice = int(
+                            input("\nSelect Year: ")
+                        )
+
+
+                        if (
+                            year_choice < 1
+                            or year_choice > len(year_list)
+                        ):
+
+                            print("Invalid year choice.")
+
+                            continue
+
+
+                        year = year_list[
+                            year_choice - 1
+                        ]
+
+                        break
+
+
+                    except ValueError:
+
+                        print(
+                            "Invalid input! "
+                            "Please enter a number."
+                        )
+
+
+                # Get subjects for new course and year
+                subjects = courses[course][year]
+
+
+                print("\nEnter New Marks:")
+
+
+                marks = {}
+
+
+                for subject in subjects:
+
+                    marks[subject] = get_valid_marks(
+                        f"Enter marks for {subject}: "
+                    )
 
 
                 # Update student details
                 student["name"] = name
+
                 student["course"] = course
+
+                student["year"] = year
+
                 student["age"] = age
+
                 student["marks"] = marks
 
 
                 # Save updated list to file
                 save_students(students)
 
-                print("\nStudent updated successfully!")
+
+                print(
+                    "\nStudent updated successfully!"
+                )
+
 
                 found = True
+
                 break
 
 
         if found == False:
+
             print("\nStudent not found.")
 
 
@@ -179,6 +429,7 @@ while True:
 
         print("\n----- Delete Student -----")
 
+
         delete_roll_no = get_valid_roll_no(
             "Enter Roll No. to delete: "
         )
@@ -186,29 +437,40 @@ while True:
 
         found = False
 
+
         for student in students:
 
             if student["roll_no"] == delete_roll_no:
 
                 students.remove(student)
 
+
                 # Save updated list to file
                 save_students(students)
 
-                print("\nStudent deleted successfully!")
+
+                print(
+                    "\nStudent deleted successfully!"
+                )
+
 
                 found = True
+
                 break
 
 
         if found == False:
+
             print("\nStudent not found.")
 
 
     # Exit program
     elif choice == "6":
 
-        print("\nExiting Student Management System...")
+        print(
+            "\nExiting Student Management System..."
+        )
+
         break
 
 
