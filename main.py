@@ -13,7 +13,8 @@ from courses import courses
 
 from statistics import (
     get_overall_statistics,
-    get_course_statistics
+    get_course_statistics,
+    get_year_statistics
 )
 
 
@@ -482,7 +483,7 @@ while True:
 
         else:
 
-            # Get overall statistics
+            # Overall statistics
             (
                 total_students,
                 average_marks,
@@ -512,7 +513,7 @@ while True:
             )
 
 
-            # Get course-wise statistics
+            # Course-wise statistics
             course_statistics = get_course_statistics(
                 students
             )
@@ -525,6 +526,22 @@ while True:
 
                 print(
                     f"{course}: {count}"
+                )
+
+
+            # Year-wise statistics
+            year_statistics = get_year_statistics(
+                students
+            )
+
+
+            print("\nYear-wise Students:")
+
+
+            for year, count in year_statistics.items():
+
+                print(
+                    f"{year}: {count}"
                 )
 
 
