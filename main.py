@@ -14,7 +14,8 @@ from courses import courses
 from statistics import (
     get_overall_statistics,
     get_course_statistics,
-    get_year_statistics
+    get_year_statistics,
+    get_student_marks_statistics
 )
 
 
@@ -196,7 +197,28 @@ while True:
 
                 for subject, marks in student["marks"].items():
 
-                    print(f"  {subject}: {marks}")
+                    print(
+                        f"  {subject}: {marks}/100"
+                    )
+
+
+                # Calculate total and percentage
+                (
+                    total_marks,
+                    obtained_marks,
+                    percentage
+                ) = get_student_marks_statistics(student)
+
+
+                print(
+                    "\nTotal Marks:",
+                    f"{obtained_marks}/{total_marks}"
+                )
+
+                print(
+                    "Percentage:",
+                    f"{percentage:.2f}%"
+                )
 
 
     # Search Student
@@ -234,7 +256,28 @@ while True:
 
                 for subject, marks in student["marks"].items():
 
-                    print(f"  {subject}: {marks}")
+                    print(
+                        f"  {subject}: {marks}/100"
+                    )
+
+
+                # Calculate total and percentage
+                (
+                    total_marks,
+                    obtained_marks,
+                    percentage
+                ) = get_student_marks_statistics(student)
+
+
+                print(
+                    "\nTotal Marks:",
+                    f"{obtained_marks}/{total_marks}"
+                )
+
+                print(
+                    "Percentage:",
+                    f"{percentage:.2f}%"
+                )
 
 
                 found = True
@@ -498,8 +541,8 @@ while True:
             )
 
             print(
-                "Average Marks:",
-                round(average_marks, 2)
+                "Average Percentage:",
+                f"{average_marks:.2f}%"
             )
 
             print(

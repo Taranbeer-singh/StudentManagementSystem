@@ -32,6 +32,8 @@ def get_overall_statistics(students):
         lowest_marks
     )
 
+
+
 def get_course_statistics(students):
 
     course_count = {}
@@ -50,6 +52,9 @@ def get_course_statistics(students):
 
     return course_count
 
+
+
+
 def get_year_statistics(students):
 
     year_count = {}
@@ -67,4 +72,18 @@ def get_year_statistics(students):
             year_count[year] = 1
 
     return year_count
+
+
+
+def get_student_marks_statistics(student):
+
+    marks = student["marks"]
+
+    total_marks = len(marks) * 100
+
+    obtained_marks = sum(marks.values())
+
+    percentage = (obtained_marks / total_marks) * 100
+
+    return total_marks, obtained_marks, percentage
 
