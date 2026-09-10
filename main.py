@@ -1,5 +1,3 @@
-# Student Management System
-
 from validations import (
     get_valid_name,
     get_valid_roll_no,
@@ -23,38 +21,37 @@ from database import (
     create_database,
     add_student,
     get_all_students,
-    get_student_by_roll
+    get_student_by_roll,
+    update_student
 )
 
 
 # Create SQLite database and tables
 create_database()
 
-
-# Load existing students from SQLite database
+# Load students from SQLite
 students = get_all_students()
 
 
 while True:
 
-    # Display main menu
-    print("\n========================================")
-    print("       STUDENT MANAGEMENT SYSTEM")
-    print("========================================")
+    print("\n========== Student Management System ==========")
 
-    print()
     print("1. Add Student")
     print("2. View Students")
     print("3. Search Student")
     print("4. Update Student")
     print("5. Delete Student")
-    print("6. Statistics")
+    print("6. Student Statistics")
     print("7. Exit")
 
     choice = input("\nEnter your choice: ")
 
 
+    # ==============================
     # Add Student
+    # ==============================
+
     if choice == "1":
 
         print("\n----- Add Student -----")
@@ -62,17 +59,17 @@ while True:
         name = get_valid_name("Enter Student Name: ")
 
         roll_no = get_valid_roll_no(
-            "Enter Student Roll No.: ",
+            "Enter Roll No.: ",
             students
         )
-
 
         print("\nAvailable Courses:")
 
         course_list = list(courses.keys())
 
-        for index, course in enumerate(course_list, start=1):
-            print(f"{index}. {course}")
+        for index, course_name in enumerate(course_list, start=1):
+
+            print(f"{index}. {course_name}")
 
 
         while True:
@@ -80,28 +77,27 @@ while True:
             try:
 
                 course_choice = int(
-                    input("\nSelect Course: ")
+                    input("Select Course: ")
                 )
 
-                if course_choice < 1 or course_choice > len(course_list):
-                    print("Invalid course choice.")
-                    continue
+                if 1 <= course_choice <= len(course_list):
+                    course = course_list[course_choice - 1]
+                    break
 
-                course = course_list[course_choice - 1]
-
-                break
+                print("Invalid course selection.")
 
             except ValueError:
 
-                print("Invalid input! Please enter a number.")
+                print("Please enter a valid number.")
 
 
-        print(f"\nAvailable Years for {course}:")
+        print("\nAvailable Years:")
 
         year_list = list(courses[course].keys())
 
-        for index, year in enumerate(year_list, start=1):
-            print(f"{index}. {year}")
+        for index, year_name in enumerate(year_list, start=1):
+
+            print(f"{index}. {year_name}")
 
 
         while True:
@@ -109,26 +105,26 @@ while True:
             try:
 
                 year_choice = int(
-                    input("\nSelect Year: ")
+                    input("Select Year: ")
                 )
 
-                if year_choice < 1 or year_choice > len(year_list):
-                    print("Invalid year choice.")
-                    continue
+                if 1 <= year_choice <= len(year_list):
+                    year = year_list[year_choice - 1]
+                    break
 
-                year = year_list[year_choice - 1]
-
-                break
+                print("Invalid year selection.")
 
             except ValueError:
 
-                print("Invalid input! Please enter a number.")
+                print("Please enter a valid number.")
 
 
-        subjects = courses[course][year]
+        age = get_valid_age("Enter Age: ")
 
 
         print("\nEnter Marks:")
+
+        subjects = courses[course][year]
 
         marks = {}
 
@@ -140,35 +136,30 @@ while True:
             )
 
 
-        age = get_valid_age("Enter Student Age: ")
-
-
         student = {
 
             "name": name,
-
             "roll_no": roll_no,
-
             "course": course,
-
             "year": year,
-
             "age": age,
-
             "marks": marks
         }
 
 
+        # Save student to SQLite
         add_student(student)
 
-
+        # Refresh students list
         students = get_all_students()
-
 
         print("\nStudent added successfully!")
 
 
+    # ==============================
     # View Students
+    # ==============================
+
     elif choice == "2":
 
         print("\n----- Student List -----")
@@ -178,52 +169,44 @@ while True:
 
             print("No students found.")
 
-
         else:
 
             for student in students:
 
-                print("\n-------------------------")
+                print("\n------------------------")
 
                 print("Name:", student["name"])
-
                 print("Roll No.:", student["roll_no"])
-
                 print("Course:", student["course"])
-
                 print("Year:", student["year"])
-
                 print("Age:", student["age"])
-
 
                 print("Marks:")
 
                 for subject, marks in student["marks"].items():
 
-                    print(
-                        f"  {subject}: {marks}/100"
-                    )
+                    print(f"{subject}: {marks}")
 
-
-                (
-                    total_marks,
-                    obtained_marks,
-                    percentage
-                ) = get_student_marks_statistics(student)
-
-
-                print(
-                    "\nTotal Marks:",
-                    f"{obtained_marks}/{total_marks}"
+                total_marks = sum(
+                    student["marks"].values()
                 )
 
-                print(
-                    "Percentage:",
-                    f"{percentage:.2f}%"
-                )
+                maximum_marks = len(
+                    student["marks"]
+                ) * 100
+
+                percentage = (
+                    total_marks / maximum_marks
+                ) * 100
+
+                print("Total Marks:", total_marks)
+                print("Percentage:", f"{percentage:.2f}%")
 
 
+    # ==============================
     # Search Student
+    # ==============================
+
     elif choice == "3":
 
         print("\n----- Search Student -----")
@@ -234,7 +217,6 @@ while True:
         )
 
 
-        # Search student directly from SQLite
         student = get_student_by_roll(
             search_roll_no
         )
@@ -244,50 +226,47 @@ while True:
 
             print("\nStudent Found!")
 
-            print("Name:", student["name"])
-
+            print("\nName:", student["name"])
             print("Roll No.:", student["roll_no"])
-
             print("Course:", student["course"])
-
             print("Year:", student["year"])
-
             print("Age:", student["age"])
 
-
-            print("Marks:")
+            print("\nMarks:")
 
             for subject, marks in student["marks"].items():
 
-                print(
-                    f"  {subject}: {marks}/100"
-                )
+                print(f"{subject}: {marks}")
 
 
-            (
-                total_marks,
-                obtained_marks,
-                percentage
-            ) = get_student_marks_statistics(student)
-
-
-            print(
-                "\nTotal Marks:",
-                f"{obtained_marks}/{total_marks}"
+            total_marks = sum(
+                student["marks"].values()
             )
 
+            maximum_marks = len(
+                student["marks"]
+            ) * 100
+
+            percentage = (
+                total_marks / maximum_marks
+            ) * 100
+
+
+            print("\nTotal Marks:", total_marks)
             print(
                 "Percentage:",
                 f"{percentage:.2f}%"
             )
-
 
         else:
 
             print("\nStudent not found.")
 
 
+    # ==============================
     # Update Student
+    # ==============================
+
     elif choice == "4":
 
         print("\n----- Update Student -----")
@@ -298,59 +277,74 @@ while True:
         )
 
 
-        found = False
+        # Find student directly from SQLite
+        existing_student = get_student_by_roll(
+            update_roll_no
+        )
 
 
-        for student in students:
+        if existing_student is None:
 
-            if student["roll_no"] == update_roll_no:
+            print("\nStudent not found.")
 
-                print("\nStudent Found!")
+        else:
 
-                print("\nEnter New Details")
+            print("\nStudent Found!")
+
+            print(
+                "Current Name:",
+                existing_student["name"]
+            )
+
+            print(
+                "Current Course:",
+                existing_student["course"]
+            )
+
+            print(
+                "Current Year:",
+                existing_student["year"]
+            )
+
+            print(
+                "Current Age:",
+                existing_student["age"]
+            )
 
 
-                name = get_valid_name(
-                    "Enter New Name: "
+            print("\nEnter New Details:")
+
+
+            name = get_valid_name(
+                "Enter New Student Name: "
+            )
+
+
+            print("\nAvailable Courses:")
+
+            course_list = list(courses.keys())
+
+
+            for index, course_name in enumerate(
+                course_list,
+                start=1
+            ):
+
+                print(
+                    f"{index}. {course_name}"
                 )
 
 
-                age = get_valid_age(
-                    "Enter New Age: "
-                )
+            while True:
+
+                try:
+
+                    course_choice = int(
+                        input("Select New Course: ")
+                    )
 
 
-                print("\nAvailable Courses:")
-
-                course_list = list(courses.keys())
-
-
-                for index, course in enumerate(
-                    course_list,
-                    start=1
-                ):
-
-                    print(f"{index}. {course}")
-
-
-                while True:
-
-                    try:
-
-                        course_choice = int(
-                            input("\nSelect Course: ")
-                        )
-
-
-                        if (
-                            course_choice < 1
-                            or course_choice > len(course_list)
-                        ):
-
-                            print("Invalid course choice.")
-
-                            continue
-
+                    if 1 <= course_choice <= len(course_list):
 
                         course = course_list[
                             course_choice - 1
@@ -359,50 +353,43 @@ while True:
                         break
 
 
-                    except ValueError:
+                    print("Invalid course selection.")
 
-                        print(
-                            "Invalid input! "
-                            "Please enter a number."
-                        )
 
+                except ValueError:
+
+                    print(
+                        "Please enter a valid number."
+                    )
+
+
+            print("\nAvailable Years:")
+
+            year_list = list(
+                courses[course].keys()
+            )
+
+
+            for index, year_name in enumerate(
+                year_list,
+                start=1
+            ):
 
                 print(
-                    f"\nAvailable Years for {course}:"
+                    f"{index}. {year_name}"
                 )
 
 
-                year_list = list(
-                    courses[course].keys()
-                )
+            while True:
+
+                try:
+
+                    year_choice = int(
+                        input("Select New Year: ")
+                    )
 
 
-                for index, year in enumerate(
-                    year_list,
-                    start=1
-                ):
-
-                    print(f"{index}. {year}")
-
-
-                while True:
-
-                    try:
-
-                        year_choice = int(
-                            input("\nSelect Year: ")
-                        )
-
-
-                        if (
-                            year_choice < 1
-                            or year_choice > len(year_list)
-                        ):
-
-                            print("Invalid year choice.")
-
-                            continue
-
+                    if 1 <= year_choice <= len(year_list):
 
                         year = year_list[
                             year_choice - 1
@@ -411,60 +398,71 @@ while True:
                         break
 
 
-                    except ValueError:
-
-                        print(
-                            "Invalid input! "
-                            "Please enter a number."
-                        )
+                    print("Invalid year selection.")
 
 
-                subjects = courses[course][year]
+                except ValueError:
 
-
-                print("\nEnter New Marks:")
-
-
-                marks = {}
-
-
-                for subject in subjects:
-
-                    marks[subject] = get_valid_marks(
-                        f"Enter marks for {subject}: "
+                    print(
+                        "Please enter a valid number."
                     )
 
 
-                student["name"] = name
-
-                student["course"] = course
-
-                student["year"] = year
-
-                student["age"] = age
-
-                student["marks"] = marks
+            age = get_valid_age(
+                "Enter New Age: "
+            )
 
 
-                save_students(students)
+            print("\nEnter New Marks:")
+
+            subjects = courses[course][year]
+
+            marks = {}
 
 
-                print(
-                    "\nStudent updated successfully!"
+            for subject in subjects:
+
+                marks[subject] = get_valid_marks(
+                    f"Enter marks for {subject}: "
                 )
 
 
-                found = True
+            updated_student = {
 
-                break
+                "name": name,
+
+                # Roll number remains unchanged
+                "roll_no": update_roll_no,
+
+                "course": course,
+
+                "year": year,
+
+                "age": age,
+
+                "marks": marks
+            }
 
 
-        if found == False:
+            # Update student in SQLite
+            update_student(
+                updated_student
+            )
 
-            print("\nStudent not found.")
+
+            # Refresh students list
+            students = get_all_students()
 
 
+            print(
+                "\nStudent updated successfully!"
+            )
+
+
+    # ==============================
     # Delete Student
+    # ==============================
+
     elif choice == "5":
 
         print("\n----- Delete Student -----")
@@ -475,130 +473,119 @@ while True:
         )
 
 
-        found = False
+        student_found = False
 
 
         for student in students:
 
             if student["roll_no"] == delete_roll_no:
 
-                students.remove(student)
-
-
-                save_students(students)
-
-
-                print(
-                    "\nStudent deleted successfully!"
-                )
-
-
-                found = True
-
+                student_found = True
                 break
 
 
-        if found == False:
+        if student_found:
+
+            students.remove(student)
+
+            save_students(students)
+
+            print(
+                "\nStudent deleted successfully!"
+            )
+
+        else:
 
             print("\nStudent not found.")
 
 
-    # Statistics
+    # ==============================
+    # Student Statistics
+    # ==============================
+
     elif choice == "6":
 
         print("\n----- Student Statistics -----")
 
+        total_students, average_marks, highest_marks, lowest_marks = (
+            get_overall_statistics(students)
+        )
 
-        if len(students) == 0:
-
-            print("\nNo students found.")
-
-        else:
-
-            (
-                total_students,
-                average_marks,
-                highest_marks,
-                lowest_marks
-            ) = get_overall_statistics(students)
-
-
-            print(
-                "\nTotal Students:",
-                total_students
-            )
-
-            print(
-                "Average Percentage:",
-                f"{average_marks:.2f}%"
-            )
-
-            print(
-                "Highest Marks:",
-                highest_marks
-            )
-
-            print(
-                "Lowest Marks:",
-                lowest_marks
-            )
-
-
-            course_statistics = get_course_statistics(
-                students
-            )
-
-
-            print("\nCourse-wise Students:")
-
-
-            for course, count in course_statistics.items():
-
-                print(
-                    f"{course}: {count}"
-                )
-
-
-            year_statistics = get_year_statistics(
-                students
-            )
-
-
-            print("\nYear-wise Students:")
-
-
-            for year, count in year_statistics.items():
-
-                print(
-                    f"{year}: {count}"
-                )
-
-
-            subject_statistics = get_subject_statistics(
-                students
-            )
-
-
-            print("\nSubject-wise Average Marks:")
-
-
-            for subject, average in subject_statistics.items():
-
-                print(
-                    f"{subject}: {average:.2f}"
-                )
-
-
-    # Exit program
-    elif choice == "7":
 
         print(
-            "\nExiting Student Management System..."
+            "\nTotal Students:",
+            total_students
         )
+
+        print(
+            "Average Marks:",
+            f"{average_marks:.2f}"
+        )
+
+        print(
+            "Highest Marks:",
+            highest_marks
+        )
+
+        print(
+            "Lowest Marks:",
+            lowest_marks
+        )
+
+
+        print("\n----- Course Statistics -----")
+
+        course_statistics = get_course_statistics(
+            students
+        )
+
+
+        for course, count in course_statistics.items():
+
+            print(
+                f"{course}: {count} student(s)"
+            )
+
+
+        print("\n----- Year Statistics -----")
+
+        year_statistics = get_year_statistics(
+            students
+        )
+
+
+        for year, count in year_statistics.items():
+
+            print(
+                f"{year}: {count} student(s)"
+            )
+
+
+        print("\n----- Subject Average Statistics -----")
+
+        subject_statistics = get_subject_statistics(
+            students
+        )
+
+
+        for subject, average in subject_statistics.items():
+
+            print(
+                f"{subject}: {average:.2f}"
+            )
+
+
+    # ==============================
+    # Exit
+    # ==============================
+
+    elif choice == "7":
+
+        print("\nThank you for using Student Management System!")
 
         break
 
 
     else:
 
-        print("\nInvalid choice!")
+        print("\nInvalid choice! Please try again.")
