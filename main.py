@@ -19,8 +19,18 @@ from statistics import (
     get_subject_statistics
 )
 
+from database import (
+    create_database,
+    add_student,
+    get_all_students
+)
 
-# Load existing students from file
+
+# Create SQLite database and tables
+create_database()
+
+
+# Load existing students from JSON file
 students = load_students()
 
 
@@ -155,12 +165,12 @@ while True:
         }
 
 
-        # Add student to list
-        students.append(student)
+        # Add student to SQLite database
+        add_student(student)
 
 
-        # Save updated list to file
-        save_students(students)
+        # Refresh students list from SQLite database
+        students = get_all_students()
 
 
         print("\nStudent added successfully!")
@@ -456,7 +466,7 @@ while True:
                 student["marks"] = marks
 
 
-                # Save updated list to file
+                # Save updated list to JSON file
                 save_students(students)
 
 
@@ -496,7 +506,7 @@ while True:
                 students.remove(student)
 
 
-                # Save updated list to file
+                # Save updated list to JSON file
                 save_students(students)
 
 
