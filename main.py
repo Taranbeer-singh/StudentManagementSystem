@@ -5,15 +5,12 @@ from validations import (
     get_valid_marks
 )
 
-from file_handler import save_students, load_students
-
 from courses import courses
 
 from statistics import (
     get_overall_statistics,
     get_course_statistics,
     get_year_statistics,
-    get_student_marks_statistics,
     get_subject_statistics
 )
 
@@ -49,9 +46,9 @@ while True:
     choice = input("\nEnter your choice: ")
 
 
-    # ==============================
+  
     # Add Student
-    # ==============================
+  
 
     if choice == "1":
 
@@ -82,7 +79,11 @@ while True:
                 )
 
                 if 1 <= course_choice <= len(course_list):
-                    course = course_list[course_choice - 1]
+
+                    course = course_list[
+                        course_choice - 1
+                    ]
+
                     break
 
                 print("Invalid course selection.")
@@ -94,11 +95,18 @@ while True:
 
         print("\nAvailable Years:")
 
-        year_list = list(courses[course].keys())
+        year_list = list(
+            courses[course].keys()
+        )
 
-        for index, year_name in enumerate(year_list, start=1):
+        for index, year_name in enumerate(
+            year_list,
+            start=1
+        ):
 
-            print(f"{index}. {year_name}")
+            print(
+                f"{index}. {year_name}"
+            )
 
 
         while True:
@@ -110,7 +118,11 @@ while True:
                 )
 
                 if 1 <= year_choice <= len(year_list):
-                    year = year_list[year_choice - 1]
+
+                    year = year_list[
+                        year_choice - 1
+                    ]
+
                     break
 
                 print("Invalid year selection.")
@@ -120,7 +132,9 @@ while True:
                 print("Please enter a valid number.")
 
 
-        age = get_valid_age("Enter Age: ")
+        age = get_valid_age(
+            "Enter Age: "
+        )
 
 
         print("\nEnter Marks:")
@@ -157,9 +171,9 @@ while True:
         print("\nStudent added successfully!")
 
 
-    # ==============================
+  
     # View Students
-    # ==============================
+  
 
     elif choice == "2":
 
@@ -176,17 +190,40 @@ while True:
 
                 print("\n------------------------")
 
-                print("Name:", student["name"])
-                print("Roll No.:", student["roll_no"])
-                print("Course:", student["course"])
-                print("Year:", student["year"])
-                print("Age:", student["age"])
+                print(
+                    "Name:",
+                    student["name"]
+                )
+
+                print(
+                    "Roll No.:",
+                    student["roll_no"]
+                )
+
+                print(
+                    "Course:",
+                    student["course"]
+                )
+
+                print(
+                    "Year:",
+                    student["year"]
+                )
+
+                print(
+                    "Age:",
+                    student["age"]
+                )
 
                 print("Marks:")
 
+
                 for subject, marks in student["marks"].items():
 
-                    print(f"{subject}: {marks}")
+                    print(
+                        f"{subject}: {marks}"
+                    )
+
 
                 total_marks = sum(
                     student["marks"].values()
@@ -197,16 +234,25 @@ while True:
                 ) * 100
 
                 percentage = (
-                    total_marks / maximum_marks
+                    total_marks /
+                    maximum_marks
                 ) * 100
 
-                print("Total Marks:", total_marks)
-                print("Percentage:", f"{percentage:.2f}%")
+
+                print(
+                    "Total Marks:",
+                    total_marks
+                )
+
+                print(
+                    "Percentage:",
+                    f"{percentage:.2f}%"
+                )
 
 
-    # ==============================
+  
     # Search Student
-    # ==============================
+  
 
     elif choice == "3":
 
@@ -227,17 +273,39 @@ while True:
 
             print("\nStudent Found!")
 
-            print("\nName:", student["name"])
-            print("Roll No.:", student["roll_no"])
-            print("Course:", student["course"])
-            print("Year:", student["year"])
-            print("Age:", student["age"])
+            print(
+                "\nName:",
+                student["name"]
+            )
+
+            print(
+                "Roll No.:",
+                student["roll_no"]
+            )
+
+            print(
+                "Course:",
+                student["course"]
+            )
+
+            print(
+                "Year:",
+                student["year"]
+            )
+
+            print(
+                "Age:",
+                student["age"]
+            )
 
             print("\nMarks:")
 
+
             for subject, marks in student["marks"].items():
 
-                print(f"{subject}: {marks}")
+                print(
+                    f"{subject}: {marks}"
+                )
 
 
             total_marks = sum(
@@ -249,11 +317,16 @@ while True:
             ) * 100
 
             percentage = (
-                total_marks / maximum_marks
+                total_marks /
+                maximum_marks
             ) * 100
 
 
-            print("\nTotal Marks:", total_marks)
+            print(
+                "\nTotal Marks:",
+                total_marks
+            )
+
             print(
                 "Percentage:",
                 f"{percentage:.2f}%"
@@ -264,9 +337,9 @@ while True:
             print("\nStudent not found.")
 
 
-    # ==============================
+  
     # Update Student
-    # ==============================
+  
 
     elif choice == "4":
 
@@ -323,7 +396,9 @@ while True:
 
             print("\nAvailable Courses:")
 
-            course_list = list(courses.keys())
+            course_list = list(
+                courses.keys()
+            )
 
 
             for index, course_name in enumerate(
@@ -354,7 +429,9 @@ while True:
                         break
 
 
-                    print("Invalid course selection.")
+                    print(
+                        "Invalid course selection."
+                    )
 
 
                 except ValueError:
@@ -399,7 +476,9 @@ while True:
                         break
 
 
-                    print("Invalid year selection.")
+                    print(
+                        "Invalid year selection."
+                    )
 
 
                 except ValueError:
@@ -460,9 +539,9 @@ while True:
             )
 
 
-    # ==============================
+  
     # Delete Student
-    # ==============================
+  
 
     elif choice == "5":
 
@@ -494,13 +573,14 @@ while True:
             print("\nStudent not found.")
 
 
-    # ==============================
+  
     # Student Statistics
-    # ==============================
+  
 
     elif choice == "6":
 
         print("\n----- Student Statistics -----")
+
 
         total_students, average_marks, highest_marks, lowest_marks = (
             get_overall_statistics(students)
@@ -530,6 +610,7 @@ while True:
 
         print("\n----- Course Statistics -----")
 
+
         course_statistics = get_course_statistics(
             students
         )
@@ -544,6 +625,7 @@ while True:
 
         print("\n----- Year Statistics -----")
 
+
         year_statistics = get_year_statistics(
             students
         )
@@ -555,8 +637,10 @@ while True:
                 f"{year}: {count} student(s)"
             )
 
+        print(
+            "\n----- Subject Average Statistics -----"
+        )
 
-        print("\n----- Subject Average Statistics -----")
 
         subject_statistics = get_subject_statistics(
             students
@@ -568,11 +652,8 @@ while True:
             print(
                 f"{subject}: {average:.2f}"
             )
-
-
-    # ==============================
+  
     # Exit
-    # ==============================
 
     elif choice == "7":
 
@@ -585,4 +666,6 @@ while True:
 
     else:
 
-        print("\nInvalid choice! Please try again.")
+        print(
+            "\nInvalid choice! Please try again."
+        )
