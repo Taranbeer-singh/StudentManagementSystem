@@ -22,7 +22,8 @@ from statistics import (
 from database import (
     create_database,
     add_student,
-    get_all_students
+    get_all_students,
+    get_student_by_roll
 )
 
 
@@ -58,7 +59,6 @@ while True:
 
         print("\n----- Add Student -----")
 
-        # Get validated student details
         name = get_valid_name("Enter Student Name: ")
 
         roll_no = get_valid_roll_no(
@@ -67,7 +67,6 @@ while True:
         )
 
 
-        # Select Course
         print("\nAvailable Courses:")
 
         course_list = list(courses.keys())
@@ -97,7 +96,6 @@ while True:
                 print("Invalid input! Please enter a number.")
 
 
-        # Select Year
         print(f"\nAvailable Years for {course}:")
 
         year_list = list(courses[course].keys())
@@ -127,7 +125,6 @@ while True:
                 print("Invalid input! Please enter a number.")
 
 
-        # Get subjects for selected course and year
         subjects = courses[course][year]
 
 
@@ -136,7 +133,6 @@ while True:
         marks = {}
 
 
-        # Get marks for each subject
         for subject in subjects:
 
             marks[subject] = get_valid_marks(
@@ -144,11 +140,9 @@ while True:
             )
 
 
-        # Get age
         age = get_valid_age("Enter Student Age: ")
 
 
-        # Create dictionary for one student
         student = {
 
             "name": name,
@@ -165,11 +159,9 @@ while True:
         }
 
 
-        # Add student to SQLite database
         add_student(student)
 
 
-        # Refresh students list from SQLite database
         students = get_all_students()
 
 
@@ -213,7 +205,6 @@ while True:
                     )
 
 
-                # Calculate total and percentage
                 (
                     total_marks,
                     obtained_marks,
@@ -243,60 +234,55 @@ while True:
         )
 
 
-        found = False
+        # Search student directly from SQLite
+        student = get_student_by_roll(
+            search_roll_no
+        )
 
 
-        for student in students:
+        if student is not None:
 
-            if student["roll_no"] == search_roll_no:
+            print("\nStudent Found!")
 
-                print("\nStudent Found!")
+            print("Name:", student["name"])
 
-                print("Name:", student["name"])
+            print("Roll No.:", student["roll_no"])
 
-                print("Roll No.:", student["roll_no"])
+            print("Course:", student["course"])
 
-                print("Course:", student["course"])
+            print("Year:", student["year"])
 
-                print("Year:", student["year"])
-
-                print("Age:", student["age"])
+            print("Age:", student["age"])
 
 
-                print("Marks:")
+            print("Marks:")
 
-                for subject, marks in student["marks"].items():
-
-                    print(
-                        f"  {subject}: {marks}/100"
-                    )
-
-
-                # Calculate total and percentage
-                (
-                    total_marks,
-                    obtained_marks,
-                    percentage
-                ) = get_student_marks_statistics(student)
-
+            for subject, marks in student["marks"].items():
 
                 print(
-                    "\nTotal Marks:",
-                    f"{obtained_marks}/{total_marks}"
-                )
-
-                print(
-                    "Percentage:",
-                    f"{percentage:.2f}%"
+                    f"  {subject}: {marks}/100"
                 )
 
 
-                found = True
+            (
+                total_marks,
+                obtained_marks,
+                percentage
+            ) = get_student_marks_statistics(student)
 
-                break
+
+            print(
+                "\nTotal Marks:",
+                f"{obtained_marks}/{total_marks}"
+            )
+
+            print(
+                "Percentage:",
+                f"{percentage:.2f}%"
+            )
 
 
-        if found == False:
+        else:
 
             print("\nStudent not found.")
 
@@ -324,19 +310,16 @@ while True:
                 print("\nEnter New Details")
 
 
-                # Get new name
                 name = get_valid_name(
                     "Enter New Name: "
                 )
 
 
-                # Get new age
                 age = get_valid_age(
                     "Enter New Age: "
                 )
 
 
-                # Select new course
                 print("\nAvailable Courses:")
 
                 course_list = list(courses.keys())
@@ -384,7 +367,6 @@ while True:
                         )
 
 
-                # Select new year
                 print(
                     f"\nAvailable Years for {course}:"
                 )
@@ -437,7 +419,6 @@ while True:
                         )
 
 
-                # Get subjects for new course and year
                 subjects = courses[course][year]
 
 
@@ -454,7 +435,6 @@ while True:
                     )
 
 
-                # Update student details
                 student["name"] = name
 
                 student["course"] = course
@@ -466,7 +446,6 @@ while True:
                 student["marks"] = marks
 
 
-                # Save updated list to JSON file
                 save_students(students)
 
 
@@ -506,7 +485,6 @@ while True:
                 students.remove(student)
 
 
-                # Save updated list to JSON file
                 save_students(students)
 
 
@@ -537,7 +515,6 @@ while True:
 
         else:
 
-            # Overall statistics
             (
                 total_students,
                 average_marks,
@@ -567,7 +544,6 @@ while True:
             )
 
 
-            # Course-wise statistics
             course_statistics = get_course_statistics(
                 students
             )
@@ -583,7 +559,6 @@ while True:
                 )
 
 
-            # Year-wise statistics
             year_statistics = get_year_statistics(
                 students
             )
@@ -599,7 +574,6 @@ while True:
                 )
 
 
-            # Subject-wise average marks
             subject_statistics = get_subject_statistics(
                 students
             )
@@ -625,7 +599,6 @@ while True:
         break
 
 
-    # Invalid menu choice
     else:
 
         print("\nInvalid choice!")
