@@ -22,7 +22,8 @@ from database import (
     add_student,
     get_all_students,
     get_student_by_roll,
-    update_student
+    update_student,
+    delete_student
 )
 
 
@@ -473,22 +474,16 @@ while True:
         )
 
 
-        student_found = False
+        # Delete student directly from SQLite
+        deleted = delete_student(
+            delete_roll_no
+        )
 
 
-        for student in students:
+        if deleted:
 
-            if student["roll_no"] == delete_roll_no:
-
-                student_found = True
-                break
-
-
-        if student_found:
-
-            students.remove(student)
-
-            save_students(students)
+            # Refresh students list
+            students = get_all_students()
 
             print(
                 "\nStudent deleted successfully!"
@@ -581,7 +576,9 @@ while True:
 
     elif choice == "7":
 
-        print("\nThank you for using Student Management System!")
+        print(
+            "\nThank you for using Student Management System!"
+        )
 
         break
 
