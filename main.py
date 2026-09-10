@@ -30,8 +30,8 @@ from database import (
 create_database()
 
 
-# Load existing students from JSON file
-students = load_students()
+# Load existing students from SQLite database
+students = get_all_students()
 
 
 while True:
