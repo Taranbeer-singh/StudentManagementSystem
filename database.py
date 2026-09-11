@@ -108,7 +108,7 @@ def get_all_students():
     cursor.execute("""
         SELECT id, name, roll_no, course, year, age
         FROM students
-        ORDER BY id
+        ORDER BY name COLLATE NOCASE
     """)
 
     student_rows = cursor.fetchall()
