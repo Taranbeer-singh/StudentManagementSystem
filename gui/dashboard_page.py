@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from courses import courses
 from database import get_all_students
 from statistics import get_overall_statistics, get_student_marks_statistics
 
@@ -75,15 +76,6 @@ class DashboardPage:
         total_students = len(students)
 
 
-        courses = set()
-
-        for student in students:
-
-            courses.add(
-                student["course"]
-            )
-
-
         total_courses = len(courses)
 
 
@@ -135,6 +127,136 @@ class DashboardPage:
             "Average Marks",
             f"{average_marks:.2f}%"
         )
+
+
+        # ==============================
+        # Available Courses
+        # ==============================
+
+        courses_title = tk.Label(
+            self.parent,
+            text="Available Courses",
+            font=("Arial", 19, "bold"),
+            bg=self.background_color,
+            fg=self.text_color
+        )
+
+        courses_title.pack(
+            anchor="w",
+            padx=40,
+            pady=(35, 15)
+        )
+
+
+        courses_frame = tk.Frame(
+            self.parent,
+            bg=self.background_color
+        )
+
+        courses_frame.pack(
+            fill="x",
+            padx=34
+        )
+
+
+        # ==============================
+        # Course Student Counts
+        # ==============================
+
+        course_student_counts = {}
+
+        for course_name in courses:
+
+            course_student_counts[course_name] = 0
+
+
+        for student in students:
+
+            student_course = student["course"]
+
+            if student_course in course_student_counts:
+
+                course_student_counts[student_course] += 1
+
+
+        # ==============================
+        # Display Courses
+        # ==============================
+
+        for course_name in courses:
+
+            student_count = course_student_counts[
+                course_name
+            ]
+
+
+            course_card = tk.Frame(
+                courses_frame,
+                bg=self.card_color,
+                highlightthickness=1,
+                highlightbackground="#e2e8f0"
+            )
+
+            course_card.pack(
+                fill="x",
+                padx=6,
+                pady=5
+            )
+
+
+            # Course icon
+
+            course_icon = tk.Label(
+                course_card,
+                text="🎓",
+                font=("Arial", 20),
+                bg=self.card_color
+            )
+
+            course_icon.pack(
+                side="left",
+                padx=(18, 10),
+                pady=12
+            )
+
+
+            # Course name
+
+            course_name_label = tk.Label(
+                course_card,
+                text=course_name,
+                font=("Arial", 12, "bold"),
+                bg=self.card_color,
+                fg=self.text_color
+            )
+
+            course_name_label.pack(
+                side="left",
+                pady=12
+            )
+
+
+            # Student count
+
+            student_text = (
+                f"{student_count} student"
+                if student_count == 1
+                else f"{student_count} students"
+            )
+
+
+            count_label = tk.Label(
+                course_card,
+                text=student_text,
+                font=("Arial", 11),
+                bg=self.card_color,
+                fg=self.secondary_text
+            )
+
+            count_label.pack(
+                side="right",
+                padx=20
+            )
 
 
         # ==============================
