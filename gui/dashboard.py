@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from gui.dashboard_page import DashboardPage
 from gui.students_page import StudentsPage
 
 
@@ -68,8 +69,17 @@ class DashboardApp:
 
 
         # ==============================
-        # Students Page
+        # Page Objects
         # ==============================
+
+        self.dashboard_page = DashboardPage(
+            self.content,
+            self.background_color,
+            self.card_color,
+            self.text_color,
+            self.secondary_text
+        )
+
 
         self.students_page = StudentsPage(
             self.content,
@@ -120,11 +130,13 @@ class DashboardApp:
             self.show_dashboard
         )
 
+
         self.create_navigation_button(
             navigation_frame,
             "👨‍🎓  Students",
             self.show_students
         )
+
 
         self.create_navigation_button(
             navigation_frame,
@@ -132,11 +144,13 @@ class DashboardApp:
             self.show_add_student
         )
 
+
         self.create_navigation_button(
             navigation_frame,
             "🔍  Search",
             self.show_search
         )
+
 
         self.create_navigation_button(
             navigation_frame,
@@ -231,7 +245,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Click
+        # Click Event
         # ==============================
 
         button_frame.bind(
@@ -246,7 +260,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Hover
+        # Hover Effect
         # ==============================
 
         button_frame.bind(
@@ -266,6 +280,7 @@ class DashboardApp:
                 False
             )
         )
+
 
         button_label.bind(
             "<Enter>",
@@ -330,45 +345,16 @@ class DashboardApp:
 
 
     # ==============================
-    # Dashboard Page
+    # Dashboard
     # ==============================
 
     def show_dashboard(self):
 
-        self.clear_content()
-
-        heading = tk.Label(
-            self.content,
-            text="Dashboard",
-            font=("Arial", 28, "bold"),
-            bg=self.background_color,
-            fg=self.text_color
-        )
-
-        heading.pack(
-            anchor="w",
-            padx=40,
-            pady=(35, 5)
-        )
-
-
-        subtitle = tk.Label(
-            self.content,
-            text="Overview of your student management system",
-            font=("Arial", 12),
-            bg=self.background_color,
-            fg=self.secondary_text
-        )
-
-        subtitle.pack(
-            anchor="w",
-            padx=40,
-            pady=(0, 25)
-        )
+        self.dashboard_page.show()
 
 
     # ==============================
-    # Students Page
+    # Students
     # ==============================
 
     def show_students(self):
@@ -377,7 +363,7 @@ class DashboardApp:
 
 
     # ==============================
-    # Add Student Page
+    # Add Student
     # ==============================
 
     def show_add_student(self):
@@ -415,7 +401,7 @@ class DashboardApp:
 
 
     # ==============================
-    # Search Page
+    # Search
     # ==============================
 
     def show_search(self):
@@ -453,7 +439,7 @@ class DashboardApp:
 
 
     # ==============================
-    # Statistics Page
+    # Statistics
     # ==============================
 
     def show_statistics(self):
@@ -491,7 +477,7 @@ class DashboardApp:
 
 
     # ==============================
-    # Settings Page
+    # Settings
     # ==============================
 
     def show_settings(self):
