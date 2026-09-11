@@ -2,6 +2,7 @@ import tkinter as tk
 
 from gui.dashboard_page import DashboardPage
 from gui.students_page import StudentsPage
+from gui.settings_page import SettingsPage
 
 
 class DashboardApp:
@@ -34,6 +35,13 @@ class DashboardApp:
         self.card_color = "#ffffff"
         self.text_color = "#0f172a"
         self.secondary_text = "#64748b"
+
+
+        # Set root background
+
+        self.root.configure(
+            bg=self.background_color
+        )
 
 
         # ==============================
@@ -79,7 +87,8 @@ class DashboardApp:
         self.canvas = tk.Canvas(
             self.content_area,
             bg=self.background_color,
-            highlightthickness=0
+            highlightthickness=0,
+            bd=0
         )
 
         self.canvas.pack(
@@ -136,6 +145,7 @@ class DashboardApp:
             self.update_scroll_region
         )
 
+
         self.canvas.bind(
             "<Configure>",
             self.resize_content_width
@@ -143,7 +153,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Mouse / Trackpad Scrolling
+        # Mouse Wheel
         # ==============================
 
         self.canvas.bind(
@@ -151,19 +161,10 @@ class DashboardApp:
             self.mouse_wheel
         )
 
+
         self.content.bind(
             "<MouseWheel>",
             self.mouse_wheel
-        )
-
-        self.canvas.bind(
-            "<Enter>",
-            self.enable_scrolling
-        )
-
-        self.content.bind(
-            "<Enter>",
-            self.enable_scrolling
         )
 
 
@@ -216,6 +217,15 @@ class DashboardApp:
 
 
         self.students_page = StudentsPage(
+            self.content,
+            self.background_color,
+            self.card_color,
+            self.text_color,
+            self.secondary_text
+        )
+
+
+        self.settings_page = SettingsPage(
             self.content,
             self.background_color,
             self.card_color,
@@ -343,9 +353,23 @@ class DashboardApp:
 
     def update_scroll_region(self, event=None):
 
-        self.canvas.configure(
-            scrollregion=self.canvas.bbox("all")
+        self.content.update_idletasks()
+
+        bbox = self.canvas.bbox(
+            "all"
         )
+
+        if bbox:
+
+            self.canvas.configure(
+                scrollregion=bbox
+            )
+
+        else:
+
+            self.canvas.configure(
+                scrollregion=(0, 0, 0, 0)
+            )
 
 
     # ==============================
@@ -354,23 +378,18 @@ class DashboardApp:
 
     def resize_content_width(self, event):
 
-        self.canvas.itemconfig(
+        self.canvas.itemconfigure(
             self.canvas_window,
             width=event.width
         )
 
-
-    # ==============================
-    # Enable Scrolling
-    # ==============================
-
-    def enable_scrolling(self, event=None):
-
-        self.canvas.focus_set()
+        self.root.after_idle(
+            self.update_scroll_region
+        )
 
 
     # ==============================
-    # Trackpad / Mouse Wheel
+    # Mouse Wheel
     # ==============================
 
     def mouse_wheel(self, event):
@@ -378,9 +397,11 @@ class DashboardApp:
         if event.delta:
 
             self.canvas.yview_scroll(
-                int(-1 * event.delta),
+                int(-event.delta / 3),
                 "units"
             )
+
+        return "break"
 
 
     # ==============================
@@ -393,7 +414,6 @@ class DashboardApp:
             -1,
             "units"
         )
-
 
         return "break"
 
@@ -409,7 +429,6 @@ class DashboardApp:
             "units"
         )
 
-
         return "break"
 
 
@@ -420,10 +439,9 @@ class DashboardApp:
     def keyboard_page_up(self, event):
 
         self.canvas.yview_scroll(
-            -1,
-            "pages"
+            -5,
+            "units"
         )
-
 
         return "break"
 
@@ -435,10 +453,9 @@ class DashboardApp:
     def keyboard_page_down(self, event):
 
         self.canvas.yview_scroll(
-            1,
-            "pages"
+            5,
+            "units"
         )
-
 
         return "break"
 
@@ -453,7 +470,6 @@ class DashboardApp:
             0
         )
 
-
         return "break"
 
 
@@ -466,7 +482,6 @@ class DashboardApp:
         self.canvas.yview_moveto(
             1
         )
-
 
         return "break"
 
@@ -602,22 +617,6 @@ class DashboardApp:
 
 
     # ==============================
-    # Clear Content
-    # ==============================
-
-    def clear_content(self):
-
-        for widget in self.content.winfo_children():
-
-            widget.destroy()
-
-
-        self.canvas.yview_moveto(
-            0
-        )
-
-
-    # ==============================
     # Dashboard
     # ==============================
 
@@ -625,9 +624,7 @@ class DashboardApp:
 
         self.dashboard_page.show()
 
-        self.canvas.yview_moveto(
-            0
-        )
+        self.reset_scroll()
 
 
     # ==============================
@@ -638,9 +635,7 @@ class DashboardApp:
 
         self.students_page.show()
 
-        self.canvas.yview_moveto(
-            0
-        )
+        self.reset_scroll()
 
 
     # ==============================
@@ -681,6 +676,9 @@ class DashboardApp:
         )
 
 
+        self.reset_scroll()
+
+
     # ==============================
     # Search
     # ==============================
@@ -717,6 +715,9 @@ class DashboardApp:
             padx=40,
             pady=(0, 25)
         )
+
+
+        self.reset_scroll()
 
 
     # ==============================
@@ -757,42 +758,56 @@ class DashboardApp:
         )
 
 
+        self.reset_scroll()
+
+
     # ==============================
     # Settings
     # ==============================
 
     def show_settings(self):
 
-        self.clear_content()
+        self.settings_page.show()
 
-        heading = tk.Label(
-            self.content,
-            text="Settings",
-            font=("Arial", 28, "bold"),
-            bg=self.background_color,
-            fg=self.text_color
+        self.reset_scroll()
+
+
+    # ==============================
+    # Reset Scroll
+    # ==============================
+
+    def reset_scroll(self):
+
+        self.root.after_idle(
+            self._reset_scroll
         )
 
-        heading.pack(
-            anchor="w",
-            padx=40,
-            pady=(35, 5)
+
+    def _reset_scroll(self):
+
+        self.content.update_idletasks()
+
+        self.update_scroll_region()
+
+        self.canvas.yview_moveto(
+            0
         )
 
 
-        subtitle = tk.Label(
-            self.content,
-            text="Application settings",
-            font=("Arial", 12),
-            bg=self.background_color,
-            fg=self.secondary_text
-        )
+        self.canvas.update_idletasks()
 
-        subtitle.pack(
-            anchor="w",
-            padx=40,
-            pady=(0, 25)
-        )
+
+    # ==============================
+    # Clear Content
+    # ==============================
+
+    def clear_content(self):
+
+        for widget in self.content.winfo_children():
+
+            widget.destroy()
+
+        self.reset_scroll()
 
 
 # ==============================
@@ -803,6 +818,8 @@ if __name__ == "__main__":
 
     root = tk.Tk()
 
-    app = DashboardApp(root)
+    app = DashboardApp(
+        root
+    )
 
     root.mainloop()
