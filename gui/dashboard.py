@@ -1,5 +1,7 @@
 import tkinter as tk
 
+from gui.students_page import StudentsPage
+
 
 class DashboardApp:
 
@@ -28,7 +30,9 @@ class DashboardApp:
         self.sidebar_color = "#1e293b"
         self.sidebar_hover = "#334155"
         self.background_color = "#f1f5f9"
+        self.card_color = "#ffffff"
         self.text_color = "#0f172a"
+        self.secondary_text = "#64748b"
 
 
         # ==============================
@@ -60,6 +64,19 @@ class DashboardApp:
             side="right",
             fill="both",
             expand=True
+        )
+
+
+        # ==============================
+        # Students Page
+        # ==============================
+
+        self.students_page = StudentsPage(
+            self.content,
+            self.background_color,
+            self.card_color,
+            self.text_color,
+            self.secondary_text
         )
 
 
@@ -340,7 +357,7 @@ class DashboardApp:
             text="Overview of your student management system",
             font=("Arial", 12),
             bg=self.background_color,
-            fg="#64748b"
+            fg=self.secondary_text
         )
 
         subtitle.pack(
@@ -356,36 +373,7 @@ class DashboardApp:
 
     def show_students(self):
 
-        self.clear_content()
-
-        heading = tk.Label(
-            self.content,
-            text="Students",
-            font=("Arial", 28, "bold"),
-            bg=self.background_color,
-            fg=self.text_color
-        )
-
-        heading.pack(
-            anchor="w",
-            padx=40,
-            pady=(35, 5)
-        )
-
-
-        subtitle = tk.Label(
-            self.content,
-            text="Manage and view all registered students",
-            font=("Arial", 12),
-            bg=self.background_color,
-            fg="#64748b"
-        )
-
-        subtitle.pack(
-            anchor="w",
-            padx=40,
-            pady=(0, 25)
-        )
+        self.students_page.show()
 
 
     # ==============================
@@ -416,7 +404,7 @@ class DashboardApp:
             text="Add a new student to the system",
             font=("Arial", 12),
             bg=self.background_color,
-            fg="#64748b"
+            fg=self.secondary_text
         )
 
         subtitle.pack(
@@ -454,7 +442,7 @@ class DashboardApp:
             text="Search students using their roll number",
             font=("Arial", 12),
             bg=self.background_color,
-            fg="#64748b"
+            fg=self.secondary_text
         )
 
         subtitle.pack(
@@ -492,7 +480,7 @@ class DashboardApp:
             text="View student performance statistics",
             font=("Arial", 12),
             bg=self.background_color,
-            fg="#64748b"
+            fg=self.secondary_text
         )
 
         subtitle.pack(
@@ -530,7 +518,7 @@ class DashboardApp:
             text="Application settings",
             font=("Arial", 12),
             bg=self.background_color,
-            fg="#64748b"
+            fg=self.secondary_text
         )
 
         subtitle.pack(
