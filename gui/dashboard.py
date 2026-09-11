@@ -1,8 +1,5 @@
 import tkinter as tk
 
-from database import get_all_students
-from statistics import get_overall_statistics, get_student_marks_statistics
-
 
 class DashboardApp:
 
@@ -23,6 +20,7 @@ class DashboardApp:
             600
         )
 
+
         # ==============================
         # Colors
         # ==============================
@@ -30,9 +28,7 @@ class DashboardApp:
         self.sidebar_color = "#1e293b"
         self.sidebar_hover = "#334155"
         self.background_color = "#f1f5f9"
-        self.card_color = "#ffffff"
         self.text_color = "#0f172a"
-        self.secondary_text = "#64748b"
 
 
         # ==============================
@@ -88,7 +84,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Main Navigation Area
+        # Navigation
         # ==============================
 
         navigation_frame = tk.Frame(
@@ -148,7 +144,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Settings at Bottom
+        # Settings
         # ==============================
 
         settings_frame = tk.Frame(
@@ -158,7 +154,6 @@ class DashboardApp:
 
         settings_frame.pack(
             fill="x",
-            padx=0,
             pady=(0, 20)
         )
 
@@ -171,7 +166,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Show Dashboard
+        # Initial Page
         # ==============================
 
         self.show_dashboard()
@@ -219,7 +214,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Click Event
+        # Click
         # ==============================
 
         button_frame.bind(
@@ -234,7 +229,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Hover Effect
+        # Hover
         # ==============================
 
         button_frame.bind(
@@ -318,19 +313,12 @@ class DashboardApp:
 
 
     # ==============================
-    # Dashboard
+    # Dashboard Page
     # ==============================
 
     def show_dashboard(self):
 
         self.clear_content()
-
-        students = get_all_students()
-
-
-        # ==============================
-        # Dashboard Header
-        # ==============================
 
         heading = tk.Label(
             self.content,
@@ -352,282 +340,13 @@ class DashboardApp:
             text="Overview of your student management system",
             font=("Arial", 12),
             bg=self.background_color,
-            fg=self.secondary_text
+            fg="#64748b"
         )
 
         subtitle.pack(
             anchor="w",
             padx=40,
             pady=(0, 25)
-        )
-
-
-        # ==============================
-        # Calculate Statistics
-        # ==============================
-
-        total_students = len(students)
-
-
-        courses = set()
-
-        for student in students:
-
-            courses.add(
-                student["course"]
-            )
-
-
-        total_courses = len(courses)
-
-
-        if students:
-
-            statistics = get_overall_statistics(
-                students
-            )
-
-            average_marks = statistics[1]
-
-        else:
-
-            average_marks = 0
-
-
-        # ==============================
-        # Statistics Cards
-        # ==============================
-
-        cards_frame = tk.Frame(
-            self.content,
-            bg=self.background_color
-        )
-
-        cards_frame.pack(
-            fill="x",
-            padx=34
-        )
-
-
-        self.create_stat_card(
-            cards_frame,
-            "👨‍🎓",
-            "Total Students",
-            total_students
-        )
-
-        self.create_stat_card(
-            cards_frame,
-            "📚",
-            "Total Courses",
-            total_courses
-        )
-
-        self.create_stat_card(
-            cards_frame,
-            "📊",
-            "Average Marks",
-            f"{average_marks:.2f}%"
-        )
-
-
-        # ==============================
-        # Recent Students
-        # ==============================
-
-        recent_title = tk.Label(
-            self.content,
-            text="Recent Students",
-            font=("Arial", 19, "bold"),
-            bg=self.background_color,
-            fg=self.text_color
-        )
-
-        recent_title.pack(
-            anchor="w",
-            padx=40,
-            pady=(35, 15)
-        )
-
-
-        table_frame = tk.Frame(
-            self.content,
-            bg=self.card_color,
-            highlightthickness=1,
-            highlightbackground="#e2e8f0"
-        )
-
-        table_frame.pack(
-            fill="x",
-            padx=40
-        )
-
-
-        # ==============================
-        # Table Header
-        # ==============================
-
-        headers = [
-            "Name",
-            "Roll No.",
-            "Course",
-            "Year",
-            "Percentage"
-        ]
-
-
-        for column, header in enumerate(headers):
-
-            label = tk.Label(
-                table_frame,
-                text=header,
-                font=("Arial", 11, "bold"),
-                bg=self.card_color,
-                fg=self.secondary_text,
-                anchor="w"
-            )
-
-            label.grid(
-                row=0,
-                column=column,
-                padx=15,
-                pady=12,
-                sticky="w"
-            )
-
-
-        # ==============================
-        # Student Rows
-        # ==============================
-
-        if students:
-
-            recent_students = students[-5:]
-
-
-            for row, student in enumerate(
-                recent_students,
-                start=1
-            ):
-
-                _, _, percentage = get_student_marks_statistics(
-                    student
-                )
-
-
-                values = [
-                    student["name"],
-                    student["roll_no"],
-                    student["course"],
-                    student["year"],
-                    f"{percentage:.2f}%"
-                ]
-
-
-                for column, value in enumerate(values):
-
-                    label = tk.Label(
-                        table_frame,
-                        text=value,
-                        font=("Arial", 11),
-                        bg=self.card_color,
-                        fg=self.text_color,
-                        anchor="w"
-                    )
-
-                    label.grid(
-                        row=row,
-                        column=column,
-                        padx=15,
-                        pady=10,
-                        sticky="w"
-                    )
-
-        else:
-
-            empty_label = tk.Label(
-                table_frame,
-                text="No students found.",
-                font=("Arial", 11),
-                bg=self.card_color,
-                fg=self.secondary_text
-            )
-
-            empty_label.grid(
-                row=1,
-                column=0,
-                columnspan=5,
-                pady=20
-            )
-
-
-    # ==============================
-    # Statistics Card
-    # ==============================
-
-    def create_stat_card(
-        self,
-        parent,
-        icon,
-        title,
-        value
-    ):
-
-        card = tk.Frame(
-            parent,
-            bg=self.card_color,
-            highlightthickness=1,
-            highlightbackground="#e2e8f0"
-        )
-
-        card.pack(
-            side="left",
-            fill="both",
-            expand=True,
-            padx=6
-        )
-
-
-        icon_label = tk.Label(
-            card,
-            text=icon,
-            font=("Arial", 22),
-            bg=self.card_color
-        )
-
-        icon_label.pack(
-            anchor="w",
-            padx=20,
-            pady=(18, 5)
-        )
-
-
-        title_label = tk.Label(
-            card,
-            text=title,
-            font=("Arial", 11),
-            bg=self.card_color,
-            fg=self.secondary_text
-        )
-
-        title_label.pack(
-            anchor="w",
-            padx=20
-        )
-
-
-        value_label = tk.Label(
-            card,
-            text=value,
-            font=("Arial", 23, "bold"),
-            bg=self.card_color,
-            fg=self.text_color
-        )
-
-        value_label.pack(
-            anchor="w",
-            padx=20,
-            pady=(3, 18)
         )
 
 
@@ -650,21 +369,22 @@ class DashboardApp:
         heading.pack(
             anchor="w",
             padx=40,
-            pady=(40, 20)
+            pady=(35, 5)
         )
 
 
-        message = tk.Label(
+        subtitle = tk.Label(
             self.content,
-            text="Student list will appear here.",
-            font=("Arial", 16),
+            text="Manage and view all registered students",
+            font=("Arial", 12),
             bg=self.background_color,
-            fg=self.secondary_text
+            fg="#64748b"
         )
 
-        message.pack(
+        subtitle.pack(
             anchor="w",
-            padx=40
+            padx=40,
+            pady=(0, 25)
         )
 
 
@@ -687,21 +407,22 @@ class DashboardApp:
         heading.pack(
             anchor="w",
             padx=40,
-            pady=(40, 20)
+            pady=(35, 5)
         )
 
 
-        message = tk.Label(
+        subtitle = tk.Label(
             self.content,
-            text="Add Student form will appear here.",
-            font=("Arial", 16),
+            text="Add a new student to the system",
+            font=("Arial", 12),
             bg=self.background_color,
-            fg=self.secondary_text
+            fg="#64748b"
         )
 
-        message.pack(
+        subtitle.pack(
             anchor="w",
-            padx=40
+            padx=40,
+            pady=(0, 25)
         )
 
 
@@ -724,21 +445,22 @@ class DashboardApp:
         heading.pack(
             anchor="w",
             padx=40,
-            pady=(40, 20)
+            pady=(35, 5)
         )
 
 
-        message = tk.Label(
+        subtitle = tk.Label(
             self.content,
-            text="Search functionality will appear here.",
-            font=("Arial", 16),
+            text="Search students using their roll number",
+            font=("Arial", 12),
             bg=self.background_color,
-            fg=self.secondary_text
+            fg="#64748b"
         )
 
-        message.pack(
+        subtitle.pack(
             anchor="w",
-            padx=40
+            padx=40,
+            pady=(0, 25)
         )
 
 
@@ -761,21 +483,22 @@ class DashboardApp:
         heading.pack(
             anchor="w",
             padx=40,
-            pady=(40, 20)
+            pady=(35, 5)
         )
 
 
-        message = tk.Label(
+        subtitle = tk.Label(
             self.content,
-            text="Statistics dashboard will appear here.",
-            font=("Arial", 16),
+            text="View student performance statistics",
+            font=("Arial", 12),
             bg=self.background_color,
-            fg=self.secondary_text
+            fg="#64748b"
         )
 
-        message.pack(
+        subtitle.pack(
             anchor="w",
-            padx=40
+            padx=40,
+            pady=(0, 25)
         )
 
 
@@ -798,21 +521,22 @@ class DashboardApp:
         heading.pack(
             anchor="w",
             padx=40,
-            pady=(40, 20)
+            pady=(35, 5)
         )
 
 
-        message = tk.Label(
+        subtitle = tk.Label(
             self.content,
-            text="Settings will appear here.",
-            font=("Arial", 16),
+            text="Application settings",
+            font=("Arial", 12),
             bg=self.background_color,
-            fg=self.secondary_text
+            fg="#64748b"
         )
 
-        message.pack(
+        subtitle.pack(
             anchor="w",
-            padx=40
+            padx=40,
+            pady=(0, 25)
         )
 
 
