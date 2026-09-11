@@ -56,15 +56,149 @@ class DashboardApp:
         )
 
 
-        self.content = tk.Frame(
+        # ==============================
+        # Content Area
+        # ==============================
+
+        self.content_area = tk.Frame(
             self.root,
             bg=self.background_color
         )
 
-        self.content.pack(
+        self.content_area.pack(
             side="right",
             fill="both",
             expand=True
+        )
+
+
+        # ==============================
+        # Scrollable Canvas
+        # ==============================
+
+        self.canvas = tk.Canvas(
+            self.content_area,
+            bg=self.background_color,
+            highlightthickness=0
+        )
+
+        self.canvas.pack(
+            side="left",
+            fill="both",
+            expand=True
+        )
+
+
+        # ==============================
+        # Scrollbar
+        # ==============================
+
+        self.scrollbar = tk.Scrollbar(
+            self.content_area,
+            orient="vertical",
+            command=self.canvas.yview
+        )
+
+        self.scrollbar.pack(
+            side="right",
+            fill="y"
+        )
+
+
+        self.canvas.configure(
+            yscrollcommand=self.scrollbar.set
+        )
+
+
+        # ==============================
+        # Scrollable Content Frame
+        # ==============================
+
+        self.content = tk.Frame(
+            self.canvas,
+            bg=self.background_color
+        )
+
+
+        self.canvas_window = self.canvas.create_window(
+            (0, 0),
+            window=self.content,
+            anchor="nw"
+        )
+
+
+        # ==============================
+        # Scroll Region
+        # ==============================
+
+        self.content.bind(
+            "<Configure>",
+            self.update_scroll_region
+        )
+
+        self.canvas.bind(
+            "<Configure>",
+            self.resize_content_width
+        )
+
+
+        # ==============================
+        # Mouse / Trackpad Scrolling
+        # ==============================
+
+        self.canvas.bind(
+            "<MouseWheel>",
+            self.mouse_wheel
+        )
+
+        self.content.bind(
+            "<MouseWheel>",
+            self.mouse_wheel
+        )
+
+        self.canvas.bind(
+            "<Enter>",
+            self.enable_scrolling
+        )
+
+        self.content.bind(
+            "<Enter>",
+            self.enable_scrolling
+        )
+
+
+        # ==============================
+        # Keyboard Scrolling
+        # ==============================
+
+        self.root.bind(
+            "<Up>",
+            self.keyboard_scroll_up
+        )
+
+        self.root.bind(
+            "<Down>",
+            self.keyboard_scroll_down
+        )
+
+        self.root.bind(
+            "<Prior>",
+            self.keyboard_page_up
+        )
+
+        self.root.bind(
+            "<Next>",
+            self.keyboard_page_down
+        )
+
+        self.root.bind(
+            "<Home>",
+            self.keyboard_home
+        )
+
+        self.root.bind(
+            "<End>",
+            self.keyboard_end
         )
 
 
@@ -201,6 +335,140 @@ class DashboardApp:
         # ==============================
 
         self.show_dashboard()
+
+
+    # ==============================
+    # Update Scroll Region
+    # ==============================
+
+    def update_scroll_region(self, event=None):
+
+        self.canvas.configure(
+            scrollregion=self.canvas.bbox("all")
+        )
+
+
+    # ==============================
+    # Resize Content Width
+    # ==============================
+
+    def resize_content_width(self, event):
+
+        self.canvas.itemconfig(
+            self.canvas_window,
+            width=event.width
+        )
+
+
+    # ==============================
+    # Enable Scrolling
+    # ==============================
+
+    def enable_scrolling(self, event=None):
+
+        self.canvas.focus_set()
+
+
+    # ==============================
+    # Trackpad / Mouse Wheel
+    # ==============================
+
+    def mouse_wheel(self, event):
+
+        if event.delta:
+
+            self.canvas.yview_scroll(
+                int(-1 * event.delta),
+                "units"
+            )
+
+
+    # ==============================
+    # Keyboard - Up
+    # ==============================
+
+    def keyboard_scroll_up(self, event):
+
+        self.canvas.yview_scroll(
+            -1,
+            "units"
+        )
+
+
+        return "break"
+
+
+    # ==============================
+    # Keyboard - Down
+    # ==============================
+
+    def keyboard_scroll_down(self, event):
+
+        self.canvas.yview_scroll(
+            1,
+            "units"
+        )
+
+
+        return "break"
+
+
+    # ==============================
+    # Keyboard - Page Up
+    # ==============================
+
+    def keyboard_page_up(self, event):
+
+        self.canvas.yview_scroll(
+            -1,
+            "pages"
+        )
+
+
+        return "break"
+
+
+    # ==============================
+    # Keyboard - Page Down
+    # ==============================
+
+    def keyboard_page_down(self, event):
+
+        self.canvas.yview_scroll(
+            1,
+            "pages"
+        )
+
+
+        return "break"
+
+
+    # ==============================
+    # Keyboard - Home
+    # ==============================
+
+    def keyboard_home(self, event):
+
+        self.canvas.yview_moveto(
+            0
+        )
+
+
+        return "break"
+
+
+    # ==============================
+    # Keyboard - End
+    # ==============================
+
+    def keyboard_end(self, event):
+
+        self.canvas.yview_moveto(
+            1
+        )
+
+
+        return "break"
 
 
     # ==============================
@@ -344,6 +612,11 @@ class DashboardApp:
             widget.destroy()
 
 
+        self.canvas.yview_moveto(
+            0
+        )
+
+
     # ==============================
     # Dashboard
     # ==============================
@@ -351,6 +624,10 @@ class DashboardApp:
     def show_dashboard(self):
 
         self.dashboard_page.show()
+
+        self.canvas.yview_moveto(
+            0
+        )
 
 
     # ==============================
@@ -360,6 +637,10 @@ class DashboardApp:
     def show_students(self):
 
         self.students_page.show()
+
+        self.canvas.yview_moveto(
+            0
+        )
 
 
     # ==============================
