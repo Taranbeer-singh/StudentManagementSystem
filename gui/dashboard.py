@@ -88,35 +88,83 @@ class DashboardApp:
 
 
         # ==============================
-        # Navigation
+        # Main Navigation Area
         # ==============================
 
+        navigation_frame = tk.Frame(
+            self.sidebar,
+            bg=self.sidebar_color
+        )
+
+        navigation_frame.pack(
+            fill="x"
+        )
+
+
         self.create_navigation_button(
+            navigation_frame,
             "🏠  Dashboard",
             self.show_dashboard
         )
 
         self.create_navigation_button(
+            navigation_frame,
             "👨‍🎓  Students",
             self.show_students
         )
 
         self.create_navigation_button(
+            navigation_frame,
             "➕  Add Student",
             self.show_add_student
         )
 
         self.create_navigation_button(
+            navigation_frame,
             "🔍  Search",
             self.show_search
         )
 
         self.create_navigation_button(
+            navigation_frame,
             "📊  Statistics",
             self.show_statistics
         )
 
+
+        # ==============================
+        # Bottom Spacer
+        # ==============================
+
+        spacer = tk.Frame(
+            self.sidebar,
+            bg=self.sidebar_color
+        )
+
+        spacer.pack(
+            fill="both",
+            expand=True
+        )
+
+
+        # ==============================
+        # Settings at Bottom
+        # ==============================
+
+        settings_frame = tk.Frame(
+            self.sidebar,
+            bg=self.sidebar_color
+        )
+
+        settings_frame.pack(
+            fill="x",
+            padx=0,
+            pady=(0, 20)
+        )
+
+
         self.create_navigation_button(
+            settings_frame,
             "⚙️  Settings",
             self.show_settings
         )
@@ -130,17 +178,18 @@ class DashboardApp:
 
 
     # ==============================
-    # Custom Navigation Item
+    # Navigation Button
     # ==============================
 
     def create_navigation_button(
         self,
+        parent,
         text,
         command
     ):
 
         button_frame = tk.Frame(
-            self.sidebar,
+            parent,
             bg=self.sidebar_color,
             cursor="hand2"
         )
@@ -148,19 +197,19 @@ class DashboardApp:
         button_frame.pack(
             fill="x",
             padx=12,
-            pady=3
+            pady=5
         )
 
 
         button_label = tk.Label(
             button_frame,
             text=text,
-            font=("Arial", 12),
+            font=("Arial", 13),
             bg=self.sidebar_color,
             fg="white",
             anchor="w",
             padx=15,
-            pady=12,
+            pady=14,
             cursor="hand2"
         )
 
@@ -169,7 +218,10 @@ class DashboardApp:
         )
 
 
-        # Click event
+        # ==============================
+        # Click Event
+        # ==============================
+
         button_frame.bind(
             "<Button-1>",
             lambda event: command()
@@ -181,7 +233,10 @@ class DashboardApp:
         )
 
 
-        # Hover effect
+        # ==============================
+        # Hover Effect
+        # ==============================
+
         button_frame.bind(
             "<Enter>",
             lambda event: self.navigation_hover(
@@ -270,8 +325,6 @@ class DashboardApp:
 
         self.clear_content()
 
-
-        # Get students from SQLite
         students = get_all_students()
 
 
@@ -310,7 +363,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Statistics
+        # Calculate Statistics
         # ==============================
 
         total_students = len(students)
@@ -342,7 +395,7 @@ class DashboardApp:
 
 
         # ==============================
-        # Cards
+        # Statistics Cards
         # ==============================
 
         cards_frame = tk.Frame(
@@ -774,5 +827,3 @@ if __name__ == "__main__":
     app = DashboardApp(root)
 
     root.mainloop()
-
-    
