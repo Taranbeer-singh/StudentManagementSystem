@@ -46,6 +46,13 @@ class DashboardApp:
 
 
         # ==============================
+        # Edit Return Page
+        # ==============================
+
+        self.edit_return_page = "students"
+
+
+        # ==============================
         # Main Layout
         # ==============================
 
@@ -250,7 +257,8 @@ class DashboardApp:
             self.background_color,
             self.card_color,
             self.text_color,
-            self.secondary_text
+            self.secondary_text,
+            self.back_from_edit
         )
 
 
@@ -663,13 +671,34 @@ class DashboardApp:
     # Edit Student
     # ==============================
 
-    def show_edit_student(self, roll_no):
+    def show_edit_student(
+        self,
+        roll_no,
+        return_page
+    ):
+
+        self.edit_return_page = return_page
 
         self.edit_student_page.show(
             roll_no
         )
 
         self.reset_scroll()
+
+
+    # ==============================
+    # Back From Edit
+    # ==============================
+
+    def back_from_edit(self):
+
+        if self.edit_return_page == "search":
+
+            self.show_search()
+
+        else:
+
+            self.show_students()
 
 
     # ==============================

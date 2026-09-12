@@ -1,4 +1,3 @@
-
 import tkinter as tk
 from tkinter import messagebox
 
@@ -842,7 +841,8 @@ class SearchPage:
     def edit_student(self, roll_no):
 
         self.edit_student_callback(
-            roll_no
+            roll_no,
+            "search"
         )
 
 

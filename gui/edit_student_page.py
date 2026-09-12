@@ -13,7 +13,8 @@ class EditStudentPage:
         background_color,
         card_color,
         text_color,
-        secondary_text
+        secondary_text,
+        back_callback
     ):
 
         self.parent = parent
@@ -22,6 +23,8 @@ class EditStudentPage:
         self.card_color = card_color
         self.text_color = text_color
         self.secondary_text = secondary_text
+
+        self.back_callback = back_callback
 
         self.subject_entries = {}
 
@@ -439,7 +442,7 @@ class EditStudentPage:
 
 
         # ==============================
-        # Update Button Container
+        # Button Container
         # ==============================
 
         button_frame = tk.Frame(
@@ -451,6 +454,47 @@ class EditStudentPage:
             fill="x",
             padx=40,
             pady=(0, 40)
+        )
+
+
+        # ==============================
+        # Back Button
+        # ==============================
+
+        back_button = tk.Label(
+            button_frame,
+            text="← Back",
+            font=("Arial", 11, "bold"),
+            bg="#e2e8f0",
+            fg=self.text_color,
+            cursor="hand2",
+            padx=25,
+            pady=10
+        )
+
+        back_button.pack(
+            side="left"
+        )
+
+
+        back_button.bind(
+            "<Button-1>",
+            lambda event: self.back_callback()
+        )
+
+
+        back_button.bind(
+            "<Enter>",
+            lambda event: back_button.config(
+                bg="#cbd5e1"
+            )
+        )
+
+        back_button.bind(
+            "<Leave>",
+            lambda event: back_button.config(
+                bg="#e2e8f0"
+            )
         )
 
 

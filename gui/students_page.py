@@ -269,7 +269,8 @@ class StudentsPage:
     def edit_student(self, roll_no):
 
         self.edit_student_callback(
-            roll_no
+            roll_no,
+            "students"
         )
 
 
