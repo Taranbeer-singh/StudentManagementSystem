@@ -32,7 +32,7 @@ The application provides a clean graphical interface for managing student record
 * **Tkinter** — Graphical User Interface
 * **SQLite** — Database management
 * **Git & GitHub** — Version control
-* **Object-oriented and modular Python structure**
+* **Modular Python structure**
 
 ## 📚 Supported Courses
 
@@ -102,6 +102,32 @@ Visual charts are created using the built-in Tkinter Canvas functionality.
 
 Provides the application's settings section and interface information.
 
+## 📸 Screenshots
+
+### Dashboard
+
+![Dashboard](screenshots/dashboard.png)
+
+### Students
+
+![Students](screenshots/students.png)
+
+### Add Student
+
+![Add Student](screenshots/add-student.png)
+
+### Search
+
+![Search](screenshots/search.png)
+
+### Statistics
+
+![Statistics](screenshots/statistics.png)
+
+### Settings
+
+![Settings](screenshots/settings.png)
+
 ## 🗄️ Database
 
 The application uses **SQLite** for persistent storage.
@@ -134,6 +160,14 @@ StudentManagementSystem/
 │   ├── edit_student_page.py
 │   ├── statistics_page.py
 │   └── settings_page.py
+│
+├── screenshots/
+│   ├── dashboard.png
+│   ├── students.png
+│   ├── add-student.png
+│   ├── search.png
+│   ├── statistics.png
+│   └── settings.png
 │
 ├── courses.py
 ├── database.py
