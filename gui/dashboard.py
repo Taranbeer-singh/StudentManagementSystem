@@ -6,6 +6,7 @@ from gui.settings_page import SettingsPage
 from gui.add_student_page import AddStudentPage
 from gui.search_page import SearchPage
 from gui.edit_student_page import EditStudentPage
+from gui.statistics_page import StatisticsPage
 
 
 class DashboardApp:
@@ -259,6 +260,15 @@ class DashboardApp:
             self.text_color,
             self.secondary_text,
             self.back_from_edit
+        )
+
+
+        self.statistics_page = StatisticsPage(
+            self.content,
+            self.background_color,
+            self.card_color,
+            self.text_color,
+            self.secondary_text
         )
 
 
@@ -729,37 +739,7 @@ class DashboardApp:
 
     def show_statistics(self):
 
-        self.clear_content()
-
-        heading = tk.Label(
-            self.content,
-            text="Statistics",
-            font=("Arial", 28, "bold"),
-            bg=self.background_color,
-            fg=self.text_color
-        )
-
-        heading.pack(
-            anchor="w",
-            padx=40,
-            pady=(35, 5)
-        )
-
-
-        subtitle = tk.Label(
-            self.content,
-            text="View student performance statistics",
-            font=("Arial", 12),
-            bg=self.background_color,
-            fg=self.secondary_text
-        )
-
-        subtitle.pack(
-            anchor="w",
-            padx=40,
-            pady=(0, 25)
-        )
-
+        self.statistics_page.show()
 
         self.reset_scroll()
 
