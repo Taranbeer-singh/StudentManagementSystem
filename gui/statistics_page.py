@@ -1,11 +1,14 @@
 import tkinter as tk
 
 from database import get_all_students
+
 from statistics import (
     get_overall_statistics,
     get_course_statistics,
     get_year_statistics,
-    get_subject_statistics
+    get_subject_statistics,
+    get_top_students,
+    get_pass_fail_statistics
 )
 
 
@@ -187,6 +190,34 @@ class StatisticsPage:
         )
 
 
+        # ==============================
+        # Top Performing Students
+        # ==============================
+
+        top_students = get_top_students(
+            students
+        )
+
+
+        self.create_top_students_card(
+            top_students
+        )
+
+
+        # ==============================
+        # Pass / Fail Statistics
+        # ==============================
+
+        pass_fail_statistics = get_pass_fail_statistics(
+            students
+        )
+
+
+        self.create_pass_fail_card(
+            pass_fail_statistics
+        )
+
+
     # ==============================
     # Statistic Card
     # ==============================
@@ -328,8 +359,6 @@ class StatisticsPage:
             )
 
 
-        # Bottom spacing
-
         spacer = tk.Frame(
             card,
             bg=self.card_color,
@@ -358,7 +387,7 @@ class StatisticsPage:
         card.pack(
             fill="x",
             padx=40,
-            pady=(0, 40)
+            pady=(0, 20)
         )
 
 
@@ -427,7 +456,133 @@ class StatisticsPage:
             )
 
 
-        # Bottom spacing
+        spacer = tk.Frame(
+            card,
+            bg=self.card_color,
+            height=10
+        )
+
+        spacer.pack()
+
+
+    # ==============================
+    # Top Students Card
+    # ==============================
+
+    def create_top_students_card(
+        self,
+        students
+    ):
+
+        card = tk.Frame(
+            self.parent,
+            bg=self.card_color,
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        card.pack(
+            fill="x",
+            padx=40,
+            pady=(0, 20)
+        )
+
+
+        # ==============================
+        # Card Heading
+        # ==============================
+
+        heading = tk.Label(
+            card,
+            text="Top Performing Students",
+            font=("Arial", 18, "bold"),
+            bg=self.card_color,
+            fg=self.text_color
+        )
+
+        heading.pack(
+            anchor="w",
+            padx=25,
+            pady=(20, 15)
+        )
+
+
+        # ==============================
+        # Student Rows
+        # ==============================
+
+        for index, student in enumerate(
+            students,
+            start=1
+        ):
+
+            row = tk.Frame(
+                card,
+                bg=self.card_color
+            )
+
+            row.pack(
+                fill="x",
+                padx=25,
+                pady=6
+            )
+
+
+            rank_label = tk.Label(
+                row,
+                text=f"#{index}",
+                font=("Arial", 11, "bold"),
+                bg=self.card_color,
+                fg=self.text_color,
+                width=5,
+                anchor="w"
+            )
+
+            rank_label.pack(
+                side="left"
+            )
+
+
+            name_label = tk.Label(
+                row,
+                text=student["name"],
+                font=("Arial", 11),
+                bg=self.card_color,
+                fg=self.text_color,
+                anchor="w"
+            )
+
+            name_label.pack(
+                side="left"
+            )
+
+
+            roll_label = tk.Label(
+                row,
+                text=f"Roll No: {student['roll_no']}",
+                font=("Arial", 10),
+                bg=self.card_color,
+                fg=self.secondary_text
+            )
+
+            roll_label.pack(
+                side="right",
+                padx=(0, 20)
+            )
+
+
+            percentage_label = tk.Label(
+                row,
+                text=f"{student['percentage']:.2f}%",
+                font=("Arial", 11, "bold"),
+                bg=self.card_color,
+                fg=self.text_color
+            )
+
+            percentage_label.pack(
+                side="right"
+            )
+
 
         spacer = tk.Frame(
             card,
@@ -436,6 +591,144 @@ class StatisticsPage:
         )
 
         spacer.pack()
+
+
+    # ==============================
+    # Pass / Fail Card
+    # ==============================
+
+    def create_pass_fail_card(
+        self,
+        statistics
+    ):
+
+        card = tk.Frame(
+            self.parent,
+            bg=self.card_color,
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        card.pack(
+            fill="x",
+            padx=40,
+            pady=(0, 40)
+        )
+
+
+        # ==============================
+        # Card Heading
+        # ==============================
+
+        heading = tk.Label(
+            card,
+            text="Pass / Fail Statistics",
+            font=("Arial", 18, "bold"),
+            bg=self.card_color,
+            fg=self.text_color
+        )
+
+        heading.pack(
+            anchor="w",
+            padx=25,
+            pady=(20, 15)
+        )
+
+
+        # ==============================
+        # Pass / Fail Cards
+        # ==============================
+
+        statistics_frame = tk.Frame(
+            card,
+            bg=self.card_color
+        )
+
+        statistics_frame.pack(
+            fill="x",
+            padx=20,
+            pady=(0, 20)
+        )
+
+
+        self.create_inner_stat_card(
+            statistics_frame,
+            "Passed",
+            statistics["passed"],
+            f"{statistics['pass_percentage']:.2f}%"
+        )
+
+
+        self.create_inner_stat_card(
+            statistics_frame,
+            "Failed",
+            statistics["failed"],
+            f"{statistics['fail_percentage']:.2f}%"
+        )
+
+
+    # ==============================
+    # Inner Statistic Card
+    # ==============================
+
+    def create_inner_stat_card(
+        self,
+        parent,
+        title,
+        count,
+        percentage
+    ):
+
+        card = tk.Frame(
+            parent,
+            bg=self.background_color,
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        card.pack(
+            side="left",
+            fill="both",
+            expand=True,
+            padx=5
+        )
+
+
+        title_label = tk.Label(
+            card,
+            text=title,
+            font=("Arial", 11, "bold"),
+            bg=self.background_color,
+            fg=self.text_color
+        )
+
+        title_label.pack(
+            pady=(15, 3)
+        )
+
+
+        count_label = tk.Label(
+            card,
+            text=str(count),
+            font=("Arial", 22, "bold"),
+            bg=self.background_color,
+            fg=self.text_color
+        )
+
+        count_label.pack()
+
+
+        percentage_label = tk.Label(
+            card,
+            text=percentage,
+            font=("Arial", 10),
+            bg=self.background_color,
+            fg=self.secondary_text
+        )
+
+        percentage_label.pack(
+            pady=(0, 15)
+        )
 
 
     # ==============================
