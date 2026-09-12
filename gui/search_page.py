@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from database import get_student_by_roll
+from database import get_student_by_roll, delete_student
+from statistics import get_student_marks_statistics
 
 
 class SearchPage:
@@ -53,7 +54,7 @@ class SearchPage:
 
         subtitle = tk.Label(
             self.parent,
-            text="Search students using their roll number",
+            text="Search and manage students using their roll number",
             font=("Arial", 12),
             bg=self.background_color,
             fg=self.secondary_text
@@ -180,19 +181,11 @@ class SearchPage:
         )
 
 
-        # ==============================
-        # Search Button Click
-        # ==============================
-
         search_button.bind(
             "<Button-1>",
             lambda event: self.search_student()
         )
 
-
-        # ==============================
-        # Search Button Hover
-        # ==============================
 
         search_button.bind(
             "<Enter>",
@@ -200,6 +193,7 @@ class SearchPage:
                 bg="#334155"
             )
         )
+
 
         search_button.bind(
             "<Leave>",
@@ -238,29 +232,7 @@ class SearchPage:
         # Initial Message
         # ==============================
 
-        initial_card = tk.Frame(
-            self.result_frame,
-            bg=self.card_color,
-            highlightthickness=1,
-            highlightbackground="#e2e8f0"
-        )
-
-        initial_card.pack(
-            fill="x"
-        )
-
-
-        initial_label = tk.Label(
-            initial_card,
-            text="Enter a roll number to search for a student.",
-            font=("Arial", 12),
-            bg=self.card_color,
-            fg=self.secondary_text
-        )
-
-        initial_label.pack(
-            pady=25
-        )
+        self.show_initial_message()
 
 
     # ==============================
@@ -341,25 +313,41 @@ class SearchPage:
         self.clear_result()
 
 
-        result_card = tk.Frame(
+        # ==============================
+        # Calculate Marks Statistics
+        # ==============================
+
+        total_marks, obtained_marks, percentage = (
+            get_student_marks_statistics(
+                student
+            )
+        )
+
+
+        # ==============================
+        # Student Information Card
+        # ==============================
+
+        info_card = tk.Frame(
             self.result_frame,
             bg=self.card_color,
             highlightthickness=1,
             highlightbackground="#e2e8f0"
         )
 
-        result_card.pack(
-            fill="x"
+        info_card.pack(
+            fill="x",
+            pady=(0, 20)
         )
 
 
         # ==============================
-        # Result Heading
+        # Card Heading
         # ==============================
 
         result_title = tk.Label(
-            result_card,
-            text="Student Found",
+            info_card,
+            text="Student Information",
             font=("Arial", 18, "bold"),
             bg=self.card_color,
             fg=self.text_color
@@ -373,60 +361,558 @@ class SearchPage:
 
 
         # ==============================
-        # Student Information
+        # Student Information Rows
         # ==============================
 
         self.create_info_row(
-            result_card,
+            info_card,
             "Name",
             student["name"]
         )
 
 
         self.create_info_row(
-            result_card,
+            info_card,
             "Roll Number",
             student["roll_no"]
         )
 
 
         self.create_info_row(
-            result_card,
+            info_card,
             "Course",
             student["course"]
         )
 
 
         self.create_info_row(
-            result_card,
+            info_card,
             "Year",
             student["year"]
         )
 
 
         self.create_info_row(
-            result_card,
+            info_card,
             "Age",
             student["age"]
         )
 
 
         # ==============================
-        # Basic Result Note
+        # Performance Card
         # ==============================
 
-        note = tk.Label(
-            result_card,
-            text="Detailed marks and actions will be added in the next block.",
+        performance_card = tk.Frame(
+            self.result_frame,
+            bg=self.card_color,
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        performance_card.pack(
+            fill="x",
+            pady=(0, 20)
+        )
+
+
+        performance_title = tk.Label(
+            performance_card,
+            text="Academic Performance",
+            font=("Arial", 18, "bold"),
+            bg=self.card_color,
+            fg=self.text_color
+        )
+
+        performance_title.pack(
+            anchor="w",
+            padx=25,
+            pady=(20, 15)
+        )
+
+
+        # ==============================
+        # Performance Statistics
+        # ==============================
+
+        statistics_frame = tk.Frame(
+            performance_card,
+            bg=self.card_color
+        )
+
+        statistics_frame.pack(
+            fill="x",
+            padx=20,
+            pady=(0, 20)
+        )
+
+
+        self.create_performance_card(
+            statistics_frame,
+            "Total Marks",
+            total_marks
+        )
+
+
+        self.create_performance_card(
+            statistics_frame,
+            "Obtained Marks",
+            obtained_marks
+        )
+
+
+        self.create_performance_card(
+            statistics_frame,
+            "Percentage",
+            f"{percentage:.2f}%"
+        )
+
+
+        # ==============================
+        # Subjects & Marks Card
+        # ==============================
+
+        marks_card = tk.Frame(
+            self.result_frame,
+            bg=self.card_color,
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        marks_card.pack(
+            fill="x",
+            pady=(0, 20)
+        )
+
+
+        marks_title = tk.Label(
+            marks_card,
+            text="Subjects & Marks",
+            font=("Arial", 18, "bold"),
+            bg=self.card_color,
+            fg=self.text_color
+        )
+
+        marks_title.pack(
+            anchor="w",
+            padx=25,
+            pady=(20, 15)
+        )
+
+
+        # ==============================
+        # Subject Rows
+        # ==============================
+
+        for subject, marks in student["marks"].items():
+
+            self.create_marks_row(
+                marks_card,
+                subject,
+                marks
+            )
+
+
+        # ==============================
+        # Action Buttons
+        # ==============================
+
+        action_frame = tk.Frame(
+            self.result_frame,
+            bg=self.background_color
+        )
+
+        action_frame.pack(
+            fill="x",
+            pady=(0, 40)
+        )
+
+
+        # ==============================
+        # New Search Button
+        # ==============================
+
+        new_search_button = tk.Label(
+            action_frame,
+            text="🔄  New Search",
+            font=("Arial", 11, "bold"),
+            bg="#e2e8f0",
+            fg=self.text_color,
+            cursor="hand2",
+            padx=20,
+            pady=10
+        )
+
+        new_search_button.pack(
+            side="left"
+        )
+
+
+        new_search_button.bind(
+            "<Button-1>",
+            lambda event: self.new_search()
+        )
+
+
+        new_search_button.bind(
+            "<Enter>",
+            lambda event: new_search_button.config(
+                bg="#cbd5e1"
+            )
+        )
+
+
+        new_search_button.bind(
+            "<Leave>",
+            lambda event: new_search_button.config(
+                bg="#e2e8f0"
+            )
+        )
+
+
+        # ==============================
+        # Edit Button
+        # ==============================
+
+        edit_button = tk.Label(
+            action_frame,
+            text="✏️  Edit",
+            font=("Arial", 11, "bold"),
+            bg="#e2e8f0",
+            fg=self.text_color,
+            cursor="hand2",
+            padx=20,
+            pady=10
+        )
+
+        edit_button.pack(
+            side="right",
+            padx=(10, 0)
+        )
+
+
+        edit_button.bind(
+            "<Button-1>",
+            lambda event: self.edit_student(
+                student["roll_no"]
+            )
+        )
+
+
+        edit_button.bind(
+            "<Enter>",
+            lambda event: edit_button.config(
+                bg="#cbd5e1"
+            )
+        )
+
+
+        edit_button.bind(
+            "<Leave>",
+            lambda event: edit_button.config(
+                bg="#e2e8f0"
+            )
+        )
+
+
+        # ==============================
+        # Delete Button
+        # ==============================
+
+        delete_button = tk.Label(
+            action_frame,
+            text="🗑️  Delete",
+            font=("Arial", 11, "bold"),
+            bg="#fee2e2",
+            fg="#991b1b",
+            cursor="hand2",
+            padx=20,
+            pady=10
+        )
+
+        delete_button.pack(
+            side="right"
+        )
+
+
+        delete_button.bind(
+            "<Button-1>",
+            lambda event: self.delete_student(
+                student["roll_no"]
+            )
+        )
+
+
+        delete_button.bind(
+            "<Enter>",
+            lambda event: delete_button.config(
+                bg="#fecaca"
+            )
+        )
+
+
+        delete_button.bind(
+            "<Leave>",
+            lambda event: delete_button.config(
+                bg="#fee2e2"
+            )
+        )
+
+
+    # ==============================
+    # Create Information Row
+    # ==============================
+
+    def create_info_row(
+        self,
+        parent,
+        title,
+        value
+    ):
+
+        row = tk.Frame(
+            parent,
+            bg=self.card_color
+        )
+
+        row.pack(
+            fill="x",
+            padx=25,
+            pady=7
+        )
+
+
+        title_label = tk.Label(
+            row,
+            text=title,
+            font=("Arial", 11, "bold"),
+            bg=self.card_color,
+            fg=self.text_color,
+            anchor="w"
+        )
+
+        title_label.pack(
+            side="left"
+        )
+
+
+        value_label = tk.Label(
+            row,
+            text=value,
+            font=("Arial", 11),
+            bg=self.card_color,
+            fg=self.secondary_text,
+            anchor="e"
+        )
+
+        value_label.pack(
+            side="right"
+        )
+
+
+    # ==============================
+    # Performance Card
+    # ==============================
+
+    def create_performance_card(
+        self,
+        parent,
+        title,
+        value
+    ):
+
+        card = tk.Frame(
+            parent,
+            bg="#f8fafc",
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        card.pack(
+            side="left",
+            fill="both",
+            expand=True,
+            padx=5
+        )
+
+
+        title_label = tk.Label(
+            card,
+            text=title,
             font=("Arial", 10),
+            bg="#f8fafc",
+            fg=self.secondary_text
+        )
+
+        title_label.pack(
+            pady=(15, 3)
+        )
+
+
+        value_label = tk.Label(
+            card,
+            text=value,
+            font=("Arial", 18, "bold"),
+            bg="#f8fafc",
+            fg=self.text_color
+        )
+
+        value_label.pack(
+            pady=(0, 15)
+        )
+
+
+    # ==============================
+    # Create Marks Row
+    # ==============================
+
+    def create_marks_row(
+        self,
+        parent,
+        subject,
+        marks
+    ):
+
+        row = tk.Frame(
+            parent,
+            bg=self.card_color
+        )
+
+        row.pack(
+            fill="x",
+            padx=25,
+            pady=7
+        )
+
+
+        subject_label = tk.Label(
+            row,
+            text=subject,
+            font=("Arial", 11),
+            bg=self.card_color,
+            fg=self.text_color,
+            anchor="w"
+        )
+
+        subject_label.pack(
+            side="left",
+            fill="x",
+            expand=True
+        )
+
+
+        marks_label = tk.Label(
+            row,
+            text=f"{marks} / 100",
+            font=("Arial", 11, "bold"),
+            bg=self.card_color,
+            fg=self.text_color,
+            anchor="e"
+        )
+
+        marks_label.pack(
+            side="right"
+        )
+
+
+    # ==============================
+    # New Search
+    # ==============================
+
+    def new_search(self):
+
+        self.roll_entry.delete(
+            0,
+            "end"
+        )
+
+        self.show_initial_message()
+
+        self.roll_entry.focus_set()
+
+
+    # ==============================
+    # Edit Student
+    # ==============================
+
+    def edit_student(self, roll_no):
+
+        messagebox.showinfo(
+            "Edit Student",
+            f"Edit page for Roll No. {roll_no} will be connected next."
+        )
+
+
+    # ==============================
+    # Delete Student
+    # ==============================
+
+    def delete_student(self, roll_no):
+
+        confirmation = messagebox.askyesno(
+            "Delete Student",
+            f"Are you sure you want to delete student with Roll No. {roll_no}?"
+        )
+
+
+        if not confirmation:
+
+            return
+
+
+        deleted = delete_student(
+            roll_no
+        )
+
+
+        if deleted:
+
+            messagebox.showinfo(
+                "Student Deleted",
+                "Student has been deleted successfully."
+            )
+
+            self.new_search()
+
+        else:
+
+            messagebox.showerror(
+                "Delete Error",
+                "Student could not be deleted."
+            )
+
+
+    # ==============================
+    # Show Initial Message
+    # ==============================
+
+    def show_initial_message(self):
+
+        self.clear_result()
+
+
+        initial_card = tk.Frame(
+            self.result_frame,
+            bg=self.card_color,
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        initial_card.pack(
+            fill="x"
+        )
+
+
+        initial_label = tk.Label(
+            initial_card,
+            text="Enter a roll number to search for a student.",
+            font=("Arial", 12),
             bg=self.card_color,
             fg=self.secondary_text
         )
 
-        note.pack(
-            anchor="w",
-            padx=25,
-            pady=(10, 20)
+        initial_label.pack(
+            pady=25
         )
 
 
@@ -484,57 +970,6 @@ class SearchPage:
 
         message.pack(
             pady=(5, 20)
-        )
-
-
-    # ==============================
-    # Create Information Row
-    # ==============================
-
-    def create_info_row(
-        self,
-        parent,
-        title,
-        value
-    ):
-
-        row = tk.Frame(
-            parent,
-            bg=self.card_color
-        )
-
-        row.pack(
-            fill="x",
-            padx=25,
-            pady=7
-        )
-
-
-        title_label = tk.Label(
-            row,
-            text=title,
-            font=("Arial", 11, "bold"),
-            bg=self.card_color,
-            fg=self.text_color,
-            anchor="w"
-        )
-
-        title_label.pack(
-            side="left"
-        )
-
-
-        value_label = tk.Label(
-            row,
-            text=value,
-            font=("Arial", 11),
-            bg=self.card_color,
-            fg=self.secondary_text,
-            anchor="e"
-        )
-
-        value_label.pack(
-            side="right"
         )
 
 
