@@ -3,7 +3,7 @@ import tkinter as tk
 from gui.dashboard_page import DashboardPage
 from gui.students_page import StudentsPage
 from gui.settings_page import SettingsPage
-
+from gui.add_student_page import AddStudentPage
 
 class DashboardApp:
 
@@ -226,6 +226,13 @@ class DashboardApp:
 
 
         self.settings_page = SettingsPage(
+            self.content,
+            self.background_color,
+            self.card_color,
+            self.text_color,
+            self.secondary_text
+        )
+        self.add_student_page = AddStudentPage(
             self.content,
             self.background_color,
             self.card_color,
@@ -644,37 +651,7 @@ class DashboardApp:
 
     def show_add_student(self):
 
-        self.clear_content()
-
-        heading = tk.Label(
-            self.content,
-            text="Add Student",
-            font=("Arial", 28, "bold"),
-            bg=self.background_color,
-            fg=self.text_color
-        )
-
-        heading.pack(
-            anchor="w",
-            padx=40,
-            pady=(35, 5)
-        )
-
-
-        subtitle = tk.Label(
-            self.content,
-            text="Add a new student to the system",
-            font=("Arial", 12),
-            bg=self.background_color,
-            fg=self.secondary_text
-        )
-
-        subtitle.pack(
-            anchor="w",
-            padx=40,
-            pady=(0, 25)
-        )
-
+        self.add_student_page.show()
 
         self.reset_scroll()
 
