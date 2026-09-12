@@ -2,7 +2,10 @@ import tkinter as tk
 from tkinter import messagebox
 
 from database import get_all_students, delete_student
-from statistics import get_student_marks_statistics
+from statistics import (
+    get_student_marks_statistics,
+    get_student_status
+)
 
 
 class StudentsPage:
@@ -99,6 +102,7 @@ class StudentsPage:
             "Course",
             "Year",
             "Percentage",
+            "Status",
             "Actions"
         ]
 
@@ -117,7 +121,7 @@ class StudentsPage:
             label.grid(
                 row=0,
                 column=column,
-                padx=15,
+                padx=12,
                 pady=14,
                 sticky="w"
             )
@@ -135,6 +139,11 @@ class StudentsPage:
             ):
 
                 _, _, percentage = get_student_marks_statistics(
+                    student
+                )
+
+
+                status = get_student_status(
                     student
                 )
 
@@ -162,10 +171,51 @@ class StudentsPage:
                     label.grid(
                         row=row,
                         column=column,
-                        padx=15,
+                        padx=12,
                         pady=12,
                         sticky="w"
                     )
+
+
+                # ==============================
+                # Status
+                # ==============================
+
+                if status == "Pass":
+
+                    status_background = "#dcfce7"
+
+                    status_foreground = "#166534"
+
+                elif status == "Fail":
+
+                    status_background = "#fee2e2"
+
+                    status_foreground = "#991b1b"
+
+                else:
+
+                    status_background = "#f1f5f9"
+
+                    status_foreground = self.secondary_text
+
+
+                status_label = tk.Label(
+                    table_frame,
+                    text=status,
+                    font=("Arial", 10, "bold"),
+                    bg=status_background,
+                    fg=status_foreground,
+                    padx=8,
+                    pady=3
+                )
+
+                status_label.grid(
+                    row=row,
+                    column=5,
+                    padx=8,
+                    pady=8
+                )
 
 
                 # ==============================
@@ -179,8 +229,8 @@ class StudentsPage:
 
                 actions_frame.grid(
                     row=row,
-                    column=5,
-                    padx=10,
+                    column=6,
+                    padx=8,
                     pady=8
                 )
 
@@ -246,7 +296,7 @@ class StudentsPage:
             empty_label.grid(
                 row=1,
                 column=0,
-                columnspan=6,
+                columnspan=7,
                 pady=25
             )
 

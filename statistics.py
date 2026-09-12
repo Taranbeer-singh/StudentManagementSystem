@@ -1,29 +1,55 @@
-# Student statistics functions
+# Student Statistics Functions
+
+from courses import courses
 
 
 def get_overall_statistics(students):
 
-    if len(students) == 0:
-        return 0, 0, 0, 0
+    total_students = len(students)
 
+    total_marks = 0
+    total_subjects = 0
 
-    total_marks = []
+    highest_marks = 0
+    lowest_marks = 0
+
+    student_total_marks = []
 
     for student in students:
 
-        for mark in student["marks"].values():
+        marks = student["marks"]
 
-            total_marks.append(mark)
+        if marks:
 
+            student_total = sum(marks.values())
 
-    total_students = len(students)
+            total_marks += student_total
+            total_subjects += len(marks)
 
-    average_marks = sum(total_marks) / len(total_marks)
+            student_total_marks.append(
+                student_total
+            )
 
-    highest_marks = max(total_marks)
+    if total_subjects == 0:
 
-    lowest_marks = min(total_marks)
+        average_marks = 0
 
+    else:
+
+        average_marks = (
+            total_marks /
+            total_subjects
+        )
+
+    if student_total_marks:
+
+        highest_marks = max(
+            student_total_marks
+        )
+
+        lowest_marks = min(
+            student_total_marks
+        )
 
     return (
         total_students,
@@ -35,7 +61,13 @@ def get_overall_statistics(students):
 
 def get_course_statistics(students):
 
-    course_count = {}
+    # Always show every course defined
+    # in courses.py.
+
+    course_count = {
+        course: 0
+        for course in courses
+    }
 
     for student in students:
 
@@ -46,6 +78,9 @@ def get_course_statistics(students):
             course_count[course] += 1
 
         else:
+
+            # Handles any unexpected course
+            # already present in the database.
 
             course_count[course] = 1
 
@@ -75,13 +110,52 @@ def get_student_marks_statistics(student):
 
     marks = student["marks"]
 
-    total_marks = len(marks) * 100
+    if not marks:
 
-    obtained_marks = sum(marks.values())
+        return 0, 0, 0
 
-    percentage = (obtained_marks / total_marks) * 100
+    total_marks = sum(
+        marks.values()
+    )
 
-    return total_marks, obtained_marks, percentage
+    total_subjects = len(marks)
+
+    maximum_marks = (
+        total_subjects * 100
+    )
+
+    percentage = (
+        total_marks /
+        maximum_marks
+    ) * 100
+
+    return (
+        total_marks,
+        maximum_marks,
+        percentage
+    )
+
+
+def get_student_status(
+    student,
+    pass_percentage=40
+):
+
+    _, _, percentage = (
+        get_student_marks_statistics(
+            student
+        )
+    )
+
+    if not student["marks"]:
+
+        return "N/A"
+
+    if percentage >= pass_percentage:
+
+        return "Pass"
+
+    return "Fail"
 
 
 def get_subject_statistics(students):
@@ -90,148 +164,179 @@ def get_subject_statistics(students):
 
     for student in students:
 
-        for subject, marks in student["marks"].items():
+        for subject, marks in (
+            student["marks"].items()
+        ):
 
             if subject in subject_marks:
 
-                subject_marks[subject].append(marks)
+                subject_marks[subject].append(
+                    marks
+                )
 
             else:
 
-                subject_marks[subject] = [marks]
-
+                subject_marks[subject] = [
+                    marks
+                ]
 
     subject_average = {}
 
-    for subject, marks_list in subject_marks.items():
+    for subject, marks_list in (
+        subject_marks.items()
+    ):
 
-        average = sum(marks_list) / len(marks_list)
+        average = (
+            sum(marks_list) /
+            len(marks_list)
+        )
 
         subject_average[subject] = average
-
 
     return subject_average
 
 
-# ==============================
-# Top Performing Students
-# ==============================
+def get_course_subject_statistics(students):
 
-def get_top_students(students, limit=5):
-
-    student_results = []
-
+    course_subject_marks = {}
 
     for student in students:
 
-        marks = student["marks"]
+        course = student["course"]
+
+        if course not in course_subject_marks:
+
+            course_subject_marks[course] = {}
+
+        for subject, marks in (
+            student["marks"].items()
+        ):
+
+            if (
+                subject
+                in course_subject_marks[course]
+            ):
+
+                course_subject_marks[
+                    course
+                ][subject].append(
+                    marks
+                )
+
+            else:
+
+                course_subject_marks[
+                    course
+                ][subject] = [
+                    marks
+                ]
+
+    course_subject_average = {}
+
+    for course, subjects in (
+        course_subject_marks.items()
+    ):
+
+        course_subject_average[course] = {}
+
+        for subject, marks_list in (
+            subjects.items()
+        ):
+
+            average = (
+                sum(marks_list) /
+                len(marks_list)
+            )
+
+            course_subject_average[
+                course
+            ][subject] = average
+
+    return course_subject_average
 
 
-        if not marks:
-            continue
+def get_top_students(
+    students,
+    limit=5
+):
 
+    student_percentages = []
 
-        total_marks = len(marks) * 100
+    for student in students:
 
-        obtained_marks = sum(marks.values())
+        _, _, percentage = (
+            get_student_marks_statistics(
+                student
+            )
+        )
 
-        percentage = (
-            obtained_marks / total_marks
-        ) * 100
+        student_percentages.append(
+            {
+                "name": student["name"],
+                "roll_no": student["roll_no"],
+                "course": student["course"],
+                "percentage": percentage
+            }
+        )
 
-
-        student_results.append({
-
-            "name": student["name"],
-
-            "roll_no": student["roll_no"],
-
-            "percentage": percentage
-        })
-
-
-    # Sort students by percentage
-    student_results.sort(
+    student_percentages.sort(
         key=lambda student: student["percentage"],
         reverse=True
     )
 
+    return student_percentages[:limit]
 
-    return student_results[:limit]
 
-
-# ==============================
-# Pass / Fail Statistics
-# ==============================
-
-def get_pass_fail_statistics(
-    students,
-    pass_percentage=40
-):
+def get_pass_fail_statistics(students):
 
     passed = 0
-
     failed = 0
-
+    not_available = 0
 
     for student in students:
 
-        marks = student["marks"]
+        status = get_student_status(
+            student
+        )
 
-
-        if not marks:
-            continue
-
-
-        total_marks = len(marks) * 100
-
-        obtained_marks = sum(marks.values())
-
-
-        percentage = (
-            obtained_marks / total_marks
-        ) * 100
-
-
-        if percentage >= pass_percentage:
+        if status == "Pass":
 
             passed += 1
 
-        else:
+        elif status == "Fail":
 
             failed += 1
 
+        else:
 
-    total_evaluated = passed + failed
+            not_available += 1
 
+    total_students = (
+        passed +
+        failed
+    )
 
-    if total_evaluated == 0:
+    if total_students == 0:
 
-        return {
-            "passed": 0,
-            "failed": 0,
-            "pass_percentage": 0,
-            "fail_percentage": 0
-        }
+        pass_percentage = 0
+        fail_percentage = 0
 
+    else:
 
-    pass_percentage_value = (
-        passed / total_evaluated
-    ) * 100
+        pass_percentage = (
+            passed /
+            total_students
+        ) * 100
 
-
-    fail_percentage_value = (
-        failed / total_evaluated
-    ) * 100
-
+        fail_percentage = (
+            failed /
+            total_students
+        ) * 100
 
     return {
-
         "passed": passed,
-
         "failed": failed,
-
-        "pass_percentage": pass_percentage_value,
-
-        "fail_percentage": fail_percentage_value
+        "N/A": not_available,
+        "pass_percentage": pass_percentage,
+        "fail_percentage": fail_percentage
     }

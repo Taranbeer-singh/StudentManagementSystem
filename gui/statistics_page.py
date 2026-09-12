@@ -6,7 +6,7 @@ from statistics import (
     get_overall_statistics,
     get_course_statistics,
     get_year_statistics,
-    get_subject_statistics,
+    get_course_subject_statistics,
     get_top_students,
     get_pass_fail_statistics
 )
@@ -38,7 +38,6 @@ class StatisticsPage:
     def show(self):
 
         self.clear_page()
-
 
         students = get_all_students()
 
@@ -77,10 +76,6 @@ class StatisticsPage:
         )
 
 
-        # ==============================
-        # Empty Database
-        # ==============================
-
         if not students:
 
             self.show_empty_message()
@@ -101,10 +96,6 @@ class StatisticsPage:
             students
         )
 
-
-        # ==============================
-        # Statistics Cards
-        # ==============================
 
         statistics_frame = tk.Frame(
             self.parent,
@@ -147,51 +138,113 @@ class StatisticsPage:
 
 
         # ==============================
-        # Course Statistics
+        # Statistics Data
         # ==============================
 
         course_statistics = get_course_statistics(
             students
         )
 
+        year_statistics = get_year_statistics(
+            students
+        )
 
-        self.create_distribution_card(
+        course_subject_statistics = (
+            get_course_subject_statistics(
+                students
+            )
+        )
+
+        pass_fail_statistics = (
+            get_pass_fail_statistics(
+                students
+            )
+        )
+
+
+        # ==============================
+        # Course + Year Charts
+        # ==============================
+
+        charts_frame = tk.Frame(
+            self.parent,
+            bg=self.background_color
+        )
+
+        charts_frame.pack(
+            fill="x",
+            padx=40,
+            pady=(0, 20)
+        )
+
+
+        self.create_chart_card(
+            charts_frame,
             "Students by Course",
             course_statistics
         )
 
 
-        # ==============================
-        # Year Statistics
-        # ==============================
-
-        year_statistics = get_year_statistics(
-            students
-        )
-
-
-        self.create_distribution_card(
+        self.create_chart_card(
+            charts_frame,
             "Students by Year",
             year_statistics
         )
 
 
         # ==============================
-        # Subject Statistics
+        # Course-wise Subject Charts
         # ==============================
 
-        subject_statistics = get_subject_statistics(
-            students
+        subject_heading = tk.Label(
+            self.parent,
+            text="Subject-wise Average Marks",
+            font=("Arial", 20, "bold"),
+            bg=self.background_color,
+            fg=self.text_color
+        )
+
+        subject_heading.pack(
+            anchor="w",
+            padx=40,
+            pady=(10, 15)
         )
 
 
-        self.create_subject_statistics_card(
-            subject_statistics
+        for course, subjects in (
+            course_subject_statistics.items()
+        ):
+
+            self.create_course_subject_card(
+                course,
+                subjects
+            )
+
+
+        # ==============================
+        # Pass / Fail Chart
+        # ==============================
+
+        pass_fail_frame = tk.Frame(
+            self.parent,
+            bg=self.background_color
+        )
+
+        pass_fail_frame.pack(
+            fill="x",
+            padx=40,
+            pady=(5, 20)
+        )
+
+
+        self.create_pass_fail_chart_card(
+            pass_fail_frame,
+            pass_fail_statistics
         )
 
 
         # ==============================
-        # Top Performing Students
+        # Top Students
         # ==============================
 
         top_students = get_top_students(
@@ -205,13 +258,8 @@ class StatisticsPage:
 
 
         # ==============================
-        # Pass / Fail Statistics
+        # Pass / Fail Summary
         # ==============================
-
-        pass_fail_statistics = get_pass_fail_statistics(
-            students
-        )
-
 
         self.create_pass_fail_card(
             pass_fail_statistics
@@ -271,110 +319,74 @@ class StatisticsPage:
 
 
     # ==============================
-    # Distribution Card
+    # Generic Chart Card
     # ==============================
 
-    def create_distribution_card(
+    def create_chart_card(
         self,
+        parent,
         title,
         statistics
     ):
 
         card = tk.Frame(
-            self.parent,
+            parent,
             bg=self.card_color,
             highlightthickness=1,
             highlightbackground="#e2e8f0"
         )
 
         card.pack(
-            fill="x",
-            padx=40,
-            pady=(0, 20)
+            side="left",
+            fill="both",
+            expand=True,
+            padx=5
         )
 
-
-        # ==============================
-        # Card Heading
-        # ==============================
 
         heading = tk.Label(
             card,
             text=title,
-            font=("Arial", 18, "bold"),
+            font=("Arial", 16, "bold"),
             bg=self.card_color,
             fg=self.text_color
         )
 
         heading.pack(
             anchor="w",
-            padx=25,
-            pady=(20, 15)
+            padx=20,
+            pady=(18, 10)
         )
 
 
-        # ==============================
-        # Statistics Rows
-        # ==============================
-
-        for name, count in statistics.items():
-
-            row = tk.Frame(
-                card,
-                bg=self.card_color
-            )
-
-            row.pack(
-                fill="x",
-                padx=25,
-                pady=6
-            )
-
-
-            name_label = tk.Label(
-                row,
-                text=name,
-                font=("Arial", 11),
-                bg=self.card_color,
-                fg=self.text_color,
-                anchor="w"
-            )
-
-            name_label.pack(
-                side="left"
-            )
-
-
-            count_label = tk.Label(
-                row,
-                text=str(count),
-                font=("Arial", 11, "bold"),
-                bg=self.card_color,
-                fg=self.text_color,
-                anchor="e"
-            )
-
-            count_label.pack(
-                side="right"
-            )
-
-
-        spacer = tk.Frame(
+        canvas = tk.Canvas(
             card,
+            height=260,
             bg=self.card_color,
-            height=10
+            highlightthickness=0
         )
 
-        spacer.pack()
+        canvas.pack(
+            fill="x",
+            padx=15,
+            pady=(0, 20)
+        )
+
+
+        self.draw_bar_chart(
+            canvas,
+            statistics
+        )
 
 
     # ==============================
-    # Subject Statistics Card
+    # Course Subject Card
     # ==============================
 
-    def create_subject_statistics_card(
+    def create_course_subject_card(
         self,
-        statistics
+        course,
+        subjects
     ):
 
         card = tk.Frame(
@@ -391,78 +403,337 @@ class StatisticsPage:
         )
 
 
-        # ==============================
-        # Card Heading
-        # ==============================
-
         heading = tk.Label(
             card,
-            text="Subject-wise Average Marks",
-            font=("Arial", 18, "bold"),
+            text=course,
+            font=("Arial", 16, "bold"),
             bg=self.card_color,
             fg=self.text_color
         )
 
         heading.pack(
             anchor="w",
-            padx=25,
-            pady=(20, 15)
+            padx=20,
+            pady=(18, 10)
         )
 
 
-        # ==============================
-        # Subject Rows
-        # ==============================
-
-        for subject, average in statistics.items():
-
-            row = tk.Frame(
-                card,
-                bg=self.card_color
-            )
-
-            row.pack(
-                fill="x",
-                padx=25,
-                pady=6
-            )
-
-
-            subject_label = tk.Label(
-                row,
-                text=subject,
-                font=("Arial", 11),
-                bg=self.card_color,
-                fg=self.text_color,
-                anchor="w"
-            )
-
-            subject_label.pack(
-                side="left"
-            )
-
-
-            average_label = tk.Label(
-                row,
-                text=f"{average:.2f}%",
-                font=("Arial", 11, "bold"),
-                bg=self.card_color,
-                fg=self.text_color,
-                anchor="e"
-            )
-
-            average_label.pack(
-                side="right"
-            )
-
-
-        spacer = tk.Frame(
+        canvas = tk.Canvas(
             card,
+            height=260,
             bg=self.card_color,
-            height=10
+            highlightthickness=0
         )
 
-        spacer.pack()
+        canvas.pack(
+            fill="x",
+            padx=15,
+            pady=(0, 20)
+        )
+
+
+        self.draw_bar_chart(
+            canvas,
+            subjects,
+            percentage=True
+        )
+
+
+    # ==============================
+    # Pass / Fail Chart
+    # ==============================
+
+    def create_pass_fail_chart_card(
+        self,
+        parent,
+        statistics
+    ):
+
+        card = tk.Frame(
+            parent,
+            bg=self.card_color,
+            highlightthickness=1,
+            highlightbackground="#e2e8f0"
+        )
+
+        card.pack(
+            fill="both",
+            expand=True,
+            padx=5
+        )
+
+
+        heading = tk.Label(
+            card,
+            text="Pass / Fail Distribution",
+            font=("Arial", 16, "bold"),
+            bg=self.card_color,
+            fg=self.text_color
+        )
+
+        heading.pack(
+            anchor="w",
+            padx=20,
+            pady=(18, 10)
+        )
+
+
+        canvas = tk.Canvas(
+            card,
+            height=260,
+            bg=self.card_color,
+            highlightthickness=0
+        )
+
+        canvas.pack(
+            fill="x",
+            padx=15,
+            pady=(0, 20)
+        )
+
+
+        chart_data = {
+            "Passed": statistics["passed"],
+            "Failed": statistics["failed"]
+        }
+
+
+        self.draw_bar_chart(
+            canvas,
+            chart_data
+        )
+
+
+    # ==============================
+    # Draw Bar Chart
+    # ==============================
+
+    def draw_bar_chart(
+        self,
+        canvas,
+        statistics,
+        percentage=False
+    ):
+
+        canvas.update_idletasks()
+
+
+        width = max(
+            canvas.winfo_width(),
+            400
+        )
+
+        height = 260
+
+
+        left_margin = 45
+        right_margin = 20
+        top_margin = 20
+        bottom_margin = 55
+
+
+        chart_width = (
+            width
+            - left_margin
+            - right_margin
+        )
+
+        chart_height = (
+            height
+            - top_margin
+            - bottom_margin
+        )
+
+
+        if not statistics:
+
+            canvas.create_text(
+                width / 2,
+                height / 2,
+                text="No data available",
+                fill=self.secondary_text,
+                font=("Arial", 10)
+            )
+
+            return
+
+
+        maximum = max(
+            statistics.values()
+        )
+
+
+        if maximum <= 0:
+
+            maximum = 1
+
+
+        # ==============================
+        # Axis
+        # ==============================
+
+        canvas.create_line(
+            left_margin,
+            top_margin,
+            left_margin,
+            height - bottom_margin,
+            fill="#cbd5e1"
+        )
+
+
+        canvas.create_line(
+            left_margin,
+            height - bottom_margin,
+            width - right_margin,
+            height - bottom_margin,
+            fill="#cbd5e1"
+        )
+
+
+        count = len(statistics)
+
+        spacing = chart_width / count
+
+        bar_width = min(
+            55,
+            spacing * 0.55
+        )
+
+
+        for index, (name, value) in enumerate(
+            statistics.items()
+        ):
+
+            bar_height = (
+                value / maximum
+            ) * chart_height
+
+
+            x_center = (
+                left_margin
+                + spacing * index
+                + spacing / 2
+            )
+
+
+            x1 = (
+                x_center -
+                bar_width / 2
+            )
+
+            x2 = (
+                x_center +
+                bar_width / 2
+            )
+
+
+            y1 = (
+                height
+                - bottom_margin
+                - bar_height
+            )
+
+            y2 = (
+                height
+                - bottom_margin
+            )
+
+
+            canvas.create_rectangle(
+                x1,
+                y1,
+                x2,
+                y2,
+                fill="#3b82f6",
+                outline=""
+            )
+
+
+            # ==============================
+            # Value
+            # ==============================
+
+            if percentage:
+
+                value_text = f"{value:.1f}%"
+
+            elif isinstance(value, float):
+
+                value_text = f"{value:.1f}"
+
+            else:
+
+                value_text = str(value)
+
+
+            canvas.create_text(
+                x_center,
+                y1 - 10,
+                text=value_text,
+                fill=self.text_color,
+                font=("Arial", 9, "bold")
+            )
+
+
+            # ==============================
+            # Label
+            # ==============================
+
+            label_text = str(name)
+
+
+            if len(label_text) > 16:
+
+                label_text = (
+                    label_text[:15]
+                    + "..."
+                )
+
+
+            canvas.create_text(
+                x_center,
+                height - bottom_margin + 18,
+                text=label_text,
+                fill=self.secondary_text,
+                font=("Arial", 9)
+            )
+
+
+        # ==============================
+        # Maximum Value
+        # ==============================
+
+        if percentage:
+
+            maximum_text = f"{maximum:.0f}%"
+
+        else:
+
+            maximum_text = str(
+                int(maximum)
+                if maximum == int(maximum)
+                else round(maximum, 1)
+            )
+
+
+        canvas.create_text(
+            left_margin - 8,
+            top_margin,
+            text=maximum_text,
+            fill=self.secondary_text,
+            font=("Arial", 8),
+            anchor="e"
+        )
+
+
+        canvas.create_text(
+            left_margin - 8,
+            height - bottom_margin,
+            text="0",
+            fill=self.secondary_text,
+            font=("Arial", 8),
+            anchor="e"
+        )
 
 
     # ==============================
@@ -488,10 +759,6 @@ class StatisticsPage:
         )
 
 
-        # ==============================
-        # Card Heading
-        # ==============================
-
         heading = tk.Label(
             card,
             text="Top Performing Students",
@@ -506,10 +773,6 @@ class StatisticsPage:
             pady=(20, 15)
         )
 
-
-        # ==============================
-        # Student Rows
-        # ==============================
 
         for index, student in enumerate(
             students,
@@ -594,7 +857,7 @@ class StatisticsPage:
 
 
     # ==============================
-    # Pass / Fail Card
+    # Pass / Fail Summary
     # ==============================
 
     def create_pass_fail_card(
@@ -616,10 +879,6 @@ class StatisticsPage:
         )
 
 
-        # ==============================
-        # Card Heading
-        # ==============================
-
         heading = tk.Label(
             card,
             text="Pass / Fail Statistics",
@@ -634,10 +893,6 @@ class StatisticsPage:
             pady=(20, 15)
         )
 
-
-        # ==============================
-        # Pass / Fail Cards
-        # ==============================
 
         statistics_frame = tk.Frame(
             card,
