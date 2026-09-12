@@ -13,7 +13,8 @@ class StudentsPage:
         background_color,
         card_color,
         text_color,
-        secondary_text
+        secondary_text,
+        edit_student_callback
     ):
 
         self.parent = parent
@@ -22,6 +23,8 @@ class StudentsPage:
         self.card_color = card_color
         self.text_color = text_color
         self.secondary_text = secondary_text
+
+        self.edit_student_callback = edit_student_callback
 
 
     # ==============================
@@ -182,7 +185,9 @@ class StudentsPage:
                 )
 
 
+                # ==============================
                 # Edit Button
+                # ==============================
 
                 edit_button = tk.Button(
                     actions_frame,
@@ -204,7 +209,9 @@ class StudentsPage:
                 )
 
 
+                # ==============================
                 # Delete Button
+                # ==============================
 
                 delete_button = tk.Button(
                     actions_frame,
@@ -261,9 +268,8 @@ class StudentsPage:
 
     def edit_student(self, roll_no):
 
-        messagebox.showinfo(
-            "Edit Student",
-            f"Edit functionality for Roll No. {roll_no} will be connected next."
+        self.edit_student_callback(
+            roll_no
         )
 
 
