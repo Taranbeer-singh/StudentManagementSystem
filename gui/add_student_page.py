@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 from courses import courses
+from database import add_student
 
 
 class AddStudentPage:
@@ -431,7 +432,6 @@ class AddStudentPage:
             )
         )
 
-
         submit_button.bind(
             "<Leave>",
             lambda event: submit_button.config(
@@ -753,13 +753,60 @@ class AddStudentPage:
 
 
         # ==============================
-        # Validation Successful
+        # Prepare Student Data
+        # ==============================
+
+        student = {
+
+            "name": name,
+
+            "roll_no": int(roll_no),
+
+            "course": course,
+
+            "year": year,
+
+            "age": age_value,
+
+            "marks": marks
+        }
+
+
+        # ==============================
+        # Save Student to SQLite
+        # ==============================
+
+        try:
+
+            add_student(
+                student
+            )
+
+        except Exception as error:
+
+            messagebox.showerror(
+                "Database Error",
+                f"Student could not be added.\n\n{error}"
+            )
+
+            return
+
+
+        # ==============================
+        # Success Message
         # ==============================
 
         messagebox.showinfo(
-            "Validation Successful",
-            "Student information is valid."
+            "Student Added",
+            "Student has been added successfully."
         )
+
+
+        # ==============================
+        # Reset Form
+        # ==============================
+
+        self.show()
 
 
     # ==============================
