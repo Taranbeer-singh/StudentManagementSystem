@@ -5,6 +5,8 @@ from gui.students_page import StudentsPage
 from gui.settings_page import SettingsPage
 from gui.add_student_page import AddStudentPage
 from gui.search_page import SearchPage
+from gui.edit_student_page import EditStudentPage
+
 
 class DashboardApp:
 
@@ -37,8 +39,6 @@ class DashboardApp:
         self.text_color = "#0f172a"
         self.secondary_text = "#64748b"
 
-
-        # Set root background
 
         self.root.configure(
             bg=self.background_color
@@ -162,7 +162,6 @@ class DashboardApp:
             self.mouse_wheel
         )
 
-
         self.content.bind(
             "<MouseWheel>",
             self.mouse_wheel
@@ -222,27 +221,40 @@ class DashboardApp:
             self.background_color,
             self.card_color,
             self.text_color,
-            self.secondary_text
+            self.secondary_text,
+            self.show_edit_student
         )
 
 
-        self.settings_page = SettingsPage(
+        self.add_student_page = AddStudentPage(
             self.content,
             self.background_color,
             self.card_color,
             self.text_color,
             self.secondary_text
         )
+
 
         self.search_page = SearchPage(
             self.content,
             self.background_color,
             self.card_color,
             self.text_color,
+            self.secondary_text,
+            self.show_edit_student
+        )
+
+
+        self.edit_student_page = EditStudentPage(
+            self.content,
+            self.background_color,
+            self.card_color,
+            self.text_color,
             self.secondary_text
         )
 
-        self.add_student_page = AddStudentPage(
+
+        self.settings_page = SettingsPage(
             self.content,
             self.background_color,
             self.card_color,
@@ -544,10 +556,6 @@ class DashboardApp:
         )
 
 
-        # ==============================
-        # Click Event
-        # ==============================
-
         button_frame.bind(
             "<Button-1>",
             lambda event: command()
@@ -558,10 +566,6 @@ class DashboardApp:
             lambda event: command()
         )
 
-
-        # ==============================
-        # Hover Effect
-        # ==============================
 
         button_frame.bind(
             "<Enter>",
@@ -656,6 +660,19 @@ class DashboardApp:
 
 
     # ==============================
+    # Edit Student
+    # ==============================
+
+    def show_edit_student(self, roll_no):
+
+        self.edit_student_page.show(
+            roll_no
+        )
+
+        self.reset_scroll()
+
+
+    # ==============================
     # Add Student
     # ==============================
 
@@ -673,7 +690,7 @@ class DashboardApp:
     def show_search(self):
 
         self.search_page.show()
-        
+
         self.reset_scroll()
 
 
@@ -749,7 +766,6 @@ class DashboardApp:
         self.canvas.yview_moveto(
             0
         )
-
 
         self.canvas.update_idletasks()
 
