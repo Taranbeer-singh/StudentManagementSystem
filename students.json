@@ -1,19 +1,28 @@
 [
     {
-        "name": "Taran",
-        "roll_no": 23,
+        "name": "SQLite Test",
+        "roll_no": 998,
         "course": "BCA",
+        "year": "1st Year",
         "age": 21,
-        "marks": 90
+        "marks": {
+            "Programming in C": 75,
+            "Mathematics": 82,
+            "Computer Fundamentals": 68,
+            "Communication Skills": 80
+        }
     },
     {
-        "name": "Taran",
-        "roll_no": 22,
-        "course": "BBA",
+        "name": "taran",
+        "roll_no": 143,
+        "course": "BCA",
+        "year": "3rd Year",
         "age": 22,
-        "marks": 80
+        "marks": {
+            "Web Development": 66,
+            "Software Engineering": 77,
+            "Artificial Intelligence": 88,
+            "Data Science": 67
+        }
     }
-
-
 ]
-
