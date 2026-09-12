@@ -105,28 +105,22 @@ Provides the application's settings section and interface information.
 ## 📸 Screenshots
 
 ### Dashboard
-
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](Screenshots/dashboard.png)
 
 ### Students
-
-![Students](screenshots/students.png)
+![Students](Screenshots/students.png)
 
 ### Add Student
-
-![Add Student](screenshots/add-student.png)
+![Add Student](Screenshots/add-Student.png)
 
 ### Search
-
-![Search](screenshots/search.png)
+![Search](Screenshots/search.png)
 
 ### Statistics
-
-![Statistics](screenshots/statistics.png)
+![Statistics](Screenshots/statistics.png)
 
 ### Settings
-
-![Settings](screenshots/settings.png)
+![Settings](Screenshots/settings.png)
 
 ## 🗄️ Database
 
